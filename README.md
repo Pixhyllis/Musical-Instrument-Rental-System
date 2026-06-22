@@ -4,7 +4,10 @@ For data struct finals
 This is intended to be seen by my groupmates.
 For my group mates, please say here:
 
-AC - 
-JV - 
-JL - 
 RB - HERE
+
+AC - 
+
+JV - 
+
+JL - 
