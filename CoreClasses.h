@@ -1,4 +1,4 @@
-
+// Header file containing the coreclasses
 #ifndef INSTRUMENTS_H
 #define INSTRUMENTS_H
 #include <iostream>
