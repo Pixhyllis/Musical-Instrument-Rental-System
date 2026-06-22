@@ -6,8 +6,7 @@ For my group mates, please say here:
 
 RB - HERE
 
-AC - 
+AC - HERE
 
-JV - 
-
-JL - 
+JV - NOT HERE
+JL - NOT HERE
