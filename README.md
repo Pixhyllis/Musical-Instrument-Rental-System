@@ -8,6 +8,5 @@ RB - HERE
 
 AC - HERE
 
-JV - 
-
-JL - 
+JV - NOT HERE
+JL - NOT HERE
