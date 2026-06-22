@@ -183,3 +183,60 @@ void SystemManager::rentInstrument(
 string customerID,
 string instrumentID,
 int rentalDays
+)
+{
+}
+
+void SystemManager::returnInstrument(string instrumentID)
+{
+}
+
+string SystemManager::addInstrument()
+{
+return "";
+}
+
+string SystemManager::generateID(string prefix)
+{
+return "";
+}
+
+string SystemManager::addCustomer()
+{
+return "";
+}
+
+string SystemManager::updateCustomerInfo()
+{
+return "";
+}
+
+double SystemManager::applyDiscount()
+{
+return 0;
+}
+
+double SystemManager::calculateTotalCost(
+double rentPerDay,
+int rentalDays
+)
+{
+return 0;
+}
+
+double SystemManager::calculateOverdueFee(
+double rentPerDay,
+int rentalDays
+)
+{
+return 0;
+}
+
+bool SystemManager::isOverdue()
+{
+return false;
+}
+
+void SystemManager::setReturnDate()
+{
+}
