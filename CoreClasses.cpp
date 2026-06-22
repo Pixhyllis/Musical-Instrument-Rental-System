@@ -86,38 +86,42 @@ Customer::~Customer()
 
 string Customer::getName()
 {
-return "";
+return name;
 }
 
 string Customer::getCustomerID()
 {
-return "";
+return customerID;
 }
 
 string Customer::getEmail()
 {
-return "";
+return email;
 }
 
 string Customer::getContactNumber()
 {
-return "";
+return contactNumber;
 }
 
 void Customer::setName(string name)
 {
+  this->name = name;
 }
 
 void Customer::setCustomerID(string customerID)
 {
+  this->customerID = customerID;
 }
 
 void Customer::setEmail(string email)
 {
+  this->email = email;
 }
 
 void Customer::setContactNumber(string contactNumber)
 {
+  this->contactNumber = contactNumber;
 }
 
 Rental::~Rental()
