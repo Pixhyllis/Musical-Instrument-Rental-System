@@ -99,38 +99,42 @@ Customer::~Customer()
 
 string Customer::getName()
 {
-return "";
+return name;
 }
 
 string Customer::getCustomerID()
 {
-return "";
+return customerID;
 }
 
 string Customer::getEmail()
 {
-return "";
+return email;
 }
 
 string Customer::getContactNumber()
 {
-return "";
+return contactNumber;
 }
 
 void Customer::setName(string name)
 {
+  this->name = name;
 }
 
 void Customer::setCustomerID(string customerID)
 {
+  this->customerID = customerID;
 }
 
 void Customer::setEmail(string email)
 {
+  this->email = email;
 }
 
 void Customer::setContactNumber(string contactNumber)
 {
+  this->contactNumber = contactNumber;
 }
 
 Rental::~Rental()
@@ -196,3 +200,60 @@ void SystemManager::rentInstrument(
 string customerID,
 string instrumentID,
 int rentalDays
+)
+{
+}
+
+void SystemManager::returnInstrument(string instrumentID)
+{
+}
+
+string SystemManager::addInstrument()
+{
+return "";
+}
+
+string SystemManager::generateID(string prefix)
+{
+return "";
+}
+
+string SystemManager::addCustomer()
+{
+return "";
+}
+
+string SystemManager::updateCustomerInfo()
+{
+return "";
+}
+
+double SystemManager::applyDiscount()
+{
+return 0;
+}
+
+double SystemManager::calculateTotalCost(
+double rentPerDay,
+int rentalDays
+)
+{
+return 0;
+}
+
+double SystemManager::calculateOverdueFee(
+double rentPerDay,
+int rentalDays
+)
+{
+return 0;
+}
+
+bool SystemManager::isOverdue()
+{
+return false;
+}
+
+void SystemManager::setReturnDate()
+{
+}
