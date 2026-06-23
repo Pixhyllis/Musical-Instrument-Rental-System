@@ -11,6 +11,12 @@ double rentPerDay,
 bool isAvailable
 )
 {
+    this->name = name;
+    this->brand = brand;
+    this->model = model;
+    this->instrumentID = instrumentID;
+    this->rentPerDay = rentPerDay;
+    this->isAvailable = isAvailable;
 }
 
 Instrument::~Instrument()
@@ -19,57 +25,64 @@ Instrument::~Instrument()
 
 string Instrument::getName()
 {
-return "";
+    return name;
 }
 
 string Instrument::getBrand()
 {
-return "";
+    return brand;
 }
 
 string Instrument::getModel()
 {
-return "";
+    return model;
 }
 
 string Instrument::getInstrumentID()
 {
-return "";
+    return instrumentID;
 }
 
 double Instrument::getRentPerDay()
 {
-return 0;
+    return rentPerDay;
 }
 
 bool Instrument::getIsAvailable()
 {
-return false;
+    return isAvailable;
 }
 
 void Instrument::setName(string name)
 {
+    this->name = name;
 }
 
 void Instrument::setBrand(string brand)
 {
+    this->brand = brand;
 }
 
 void Instrument::setModel(string model)
 {
+    this->model = model;
 }
 
 void Instrument::setInstrumentID(string instrumentID)
 {
+    this->instrumentID = instrumentID;
 }
 
 void Instrument::setRentPerDay(double rentPerDay)
 {
+    this->rentPerDay = rentPerDay;
 }
 
 void Instrument::setIsAvailable(bool isAvailable)
 {
+    this->isAvailable = isAvailable;
 }
+
 // customer is always right
 Customer::Customer(
 string name,
