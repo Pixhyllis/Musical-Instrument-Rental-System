@@ -1,6 +1,6 @@
 // Header file containing the coreclasses
-#ifndef INSTRUMENTS_H
-#define INSTRUMENTS_H
+#ifndef CORECLASSES_H
+#define CORECLASSES_H
 #include <iostream>
 #include <string>
 #include <vector>
@@ -29,15 +29,15 @@ public:
         string model,
         string instrumentID,
         double rentPerDay,
-        bool isAvailable
+        bool isAvailable 
     );
     ~Instrument();
-    string getName();
-    string getBrand();
-    string getModel();
-    string getInstrumentID();
-    double getRentPerDay();
-    bool getIsAvailable();
+    string getName() const;
+    string getBrand() const;
+    string getModel() const;
+    string getInstrumentID() const;
+    double getRentPerDay() const;
+    bool getIsAvailable() const; 
     void setName(string name);
     void setBrand(string brand);
     void setModel(string model);
@@ -62,10 +62,10 @@ public:
         string contactNumber    
     );
     ~Customer();
-    string getName();
-    string getCustomerID();
-    string getEmail();
-    string getContactNumber();
+    string getName() const;
+    string getCustomerID() const;
+    string getEmail() const;
+    string getContactNumber() const;
     void setName(string name);
     void setCustomerID(string customerID);
     void setEmail(string email);
@@ -91,11 +91,11 @@ public:
         string customerID
     );
     ~Rental();
-    int getRentalDays();
-    double getTotalCost();
-    string getInstrumentID();
-    string getRentalID();
-    string getCustomerID();
+    int getRentalDays() const;
+    double getTotalCost() const;
+    string getInstrumentID() const;
+    string getRentalID() const;
+    string getCustomerID() const;
     void setRentalDays(int rentalDays);
     void setTotalCost(double totalCost);
     void setInstrumentID(string instrumentID);
@@ -115,9 +115,9 @@ public:
     void displayAllRentals();
     void rentInstrument(string customerID, string instrumentID, int rentalDays);
     void returnInstrument(string instrumentID);
-    string addInstrument();
+    void addInstrument();
+    void addCustomer(const Customer& newCustomer);
     string generateID(string prefix);
-    string addCustomer();
     string updateCustomerInfo();
     double applyDiscount();
     double calculateTotalCost(double rentPerDay, int rentalDays);
