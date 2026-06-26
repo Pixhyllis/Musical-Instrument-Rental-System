@@ -20,7 +20,7 @@ BASIC SYSTEM / CORE CLASSES
 
 FEATURES TO ADD
 - File handling 
-- ✅ Unique ID generation for renting 
+✅ Unique ID generation for renting 
 - Search & Filter (brand/model, available instruments, who's renting what instrument)
 - Sorting (instrument rent price, rental date, custormers' names)
 - Report (daily income, list of currently rented instruments, rental history)
