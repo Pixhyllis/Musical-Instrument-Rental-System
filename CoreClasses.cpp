@@ -183,8 +183,37 @@ void SystemManager::displayAvailableInstruments(){
 void SystemManager::displayAllRentals(){
 }
 
-void SystemManager::rentInstrument(string customerID, string instrumentID, int rentalDays){
 
+void SystemManager::rentInstrument(){
+    int userChoice, rentalDays;
+    string customerID;
+
+    // TODO: check if customer has a valid ID, then proceed to rent
+    cout << "Enter customer ID: ";
+    cin >> customerID;
+
+    cout << "Select what Instrument you'd like to rent:" << endl;
+    displayAvailableInstruments();
+    cin >> userChoice;
+    int selectedIndex = userChoice - 1;
+
+    if(selectedIndex >= 0 && selectedIndex < instruments.size()){
+        Instrument selectedInstrument = instruments[selectedIndex];
+        
+        cout << "Selected: " << selectedInstrument.getName() << endl;
+        cout << "How long would you like to rent this instrument? ";
+        cin >> rentalDays;
+
+        string newID = generateID(RENTAL_PREFIX);
+        double totalCost = calculateTotalCost(selectedInstrument.getRentPerDay(), rentalDays);
+        Rental newRental(rentalDays, totalCost, selectedInstrument.getInstrumentID(), newID, customerID);
+        rentals.push_back(newRental);
+
+        cout << "Rented instrument with the ID of " << newID << endl;
+    
+    }else{
+        cout << "Input a valid number." << endl;
+    }
 }
 
 void SystemManager::returnInstrument(string instrumentID)
@@ -232,8 +261,21 @@ string SystemManager::generateID(string prefix){
     return id;
 }
 
-void SystemManager::addCustomer(const Customer& newCustomer){
+void SystemManager::addCustomer(){
+    string name, customerID, email, contactNumber;  
+
+    cout << "Enter your name: ";
+    cin >> name;
+    cout << "Enter your email address: ";
+    cin >> email;
+    cout << "Enter your contact number: ";
+    cin >> contactNumber;
+
+    string newID = generateID(CUSTOMER_PREFIX);
+    Customer newCustomer(name, newID, email, contactNumber);
     customers.push_back(newCustomer);
+
+    cout << "Added customer with the ID of '" << newID << "'" << endl;
 }
 
 string SystemManager::updateCustomerInfo()
@@ -262,5 +304,5 @@ void SystemManager::setReturnDate(){
 }
 
 void SystemManager::displayRentalInfo(){
-
+    
 }

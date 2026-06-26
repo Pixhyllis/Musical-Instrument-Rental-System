@@ -113,10 +113,10 @@ private:
 public:
     void displayAvailableInstruments();
     void displayAllRentals();
-    void rentInstrument(string customerID, string instrumentID, int rentalDays);
+    void rentInstrument();
     void returnInstrument(string instrumentID);
     void addInstrument();
-    void addCustomer(const Customer& newCustomer);
+    void addCustomer();
     string generateID(string prefix);
     string updateCustomerInfo();
     double applyDiscount();
