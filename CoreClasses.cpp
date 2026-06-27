@@ -1,7 +1,17 @@
 #include "CoreClasses.h"
 #include <vector>
 #include <iostream>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <string>
 using namespace std;
+
+// TODO: if no valid customer id, deny renting
+// TODO: if no instruments available, say so
+// TODO: if no valid rentIds, deny returning
+// TODO: user must enter valid credentials when registering customer
+
 
 // --------------------------------INSTRUMENTS-----------------------------------
 
@@ -74,7 +84,6 @@ Customer::Customer(string name, string customerID, string email, string contactN
     this->contactNumber = contactNumber;
 }
 
-
 Customer::~Customer(){
 }
 
@@ -110,12 +119,17 @@ void Customer::setContactNumber(string contactNumber){
     this->contactNumber = contactNumber;
 }
 
-Rental::Rental(int rentalDays, double totalCost, string instrumentID, string rentalID, string customerID){
+// --------------------------- RENTAL ----------------------------
+Rental::Rental(int rentalDays, double totalCost, bool isCompleted, string instrumentID, string rentalID, string customerID, string rentalDate, string returnDate){
     this->rentalDays = rentalDays;
     this->totalCost = totalCost;
     this->instrumentID = instrumentID;
     this->rentalID = rentalID;
     this->customerID = customerID;
+    this->rentalDate = rentalDate;
+    this->returnDate = returnDate;
+    this->isCompleted = isCompleted;
+    
 }
 
 Rental::~Rental(){
@@ -129,6 +143,10 @@ double Rental::getTotalCost() const{
     return totalCost;
 }
 
+bool Rental::getIsCompleted() const{
+    return isCompleted;
+}
+
 string Rental::getInstrumentID() const{
     return instrumentID;
 }
@@ -139,6 +157,14 @@ string Rental::getRentalID() const{
 
 string Rental::getCustomerID() const{
     return customerID;
+}
+
+string Rental::getRentalDate() const{
+    return rentalDate;
+}
+
+string Rental::getReturnDate() const{
+    return returnDate;
 }
 
 void Rental::setRentalDays(int rentalDays){
@@ -161,17 +187,31 @@ void Rental::setCustomerID(string customerID){
     this->customerID = customerID;
 }
 
+void Rental::setRentalDate(string rentalDate){
+    this->rentalDate = rentalDate;
+}
+
+void Rental::setReturnDate(string returnDate){
+    this->returnDate = returnDate;
+}
+
+void Rental::setIsCompleted(bool isCompleted){
+    this->isCompleted = isCompleted;
+}
 // ------------------------- SystemManager ---------------------------------
 
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
-    for (const Instrument& instrument : instruments){
-        if (instrument.getIsAvailable()){
+    for (int i = 0; i < instruments.size(); i++){
+        if (instruments[i].getIsAvailable()){
             found = true;
-            cout << "Instrument ID: " << instrument.getInstrumentID() << endl;
-            cout << "Name: " << instrument.getName() << endl;
-            cout << "Brand: " << instrument.getBrand() << endl;
-            cout << "Rent per day: " << instrument.getRentPerDay() << endl;
+            cout << "---------------------------------" << endl;
+            cout << "INSTRUMNET NO. " << i + 1 << endl;
+            cout << "Instrument ID: " << instruments[i].getInstrumentID() << endl;
+            cout << "Name: " << instruments[i].getName() << endl;
+            cout << "Brand: " << instruments[i].getBrand() << endl;
+            cout << "Model: " << instruments[i].getModel() << endl;
+            cout << "Rent per day: " << instruments[i].getRentPerDay() << endl;
             cout << endl;
         }
     }
@@ -181,19 +221,24 @@ void SystemManager::displayAvailableInstruments(){
 }
 
 void SystemManager::displayAllRentals(){
+    for (const Rental& rental : rentals){
+        cout << "-----------------------" << endl;
+        displayRentalInfo(rental);
+    }
 }
-
 
 void SystemManager::rentInstrument(){
     int userChoice, rentalDays;
+    bool isCompleted = false;
     string customerID;
 
     // TODO: check if customer has a valid ID, then proceed to rent
     cout << "Enter customer ID: ";
     cin >> customerID;
 
-    cout << "Select what Instrument you'd like to rent:" << endl;
     displayAvailableInstruments();
+    cout << "Select what Instrument you'd like to rent:";
+    
     cin >> userChoice;
     int selectedIndex = userChoice - 1;
 
@@ -201,12 +246,29 @@ void SystemManager::rentInstrument(){
         Instrument selectedInstrument = instruments[selectedIndex];
         
         cout << "Selected: " << selectedInstrument.getName() << endl;
-        cout << "How long would you like to rent this instrument? ";
+        cout << "How many days would you like to rent this instrument? ";
         cin >> rentalDays;
+        
+        bool discountApply = false;
+        cout << "Apply 10% discount? (1 for yes, 0 for no): ";
+        cin >> discountApply;
+
+        selectedInstrument.setIsAvailable(false);
 
         string newID = generateID(RENTAL_PREFIX);
-        double totalCost = calculateTotalCost(selectedInstrument.getRentPerDay(), rentalDays);
-        Rental newRental(rentalDays, totalCost, selectedInstrument.getInstrumentID(), newID, customerID);
+        double baseCost = calculateBaseCost(selectedInstrument.getRentPerDay(), rentalDays);
+        double discountAmount = applyDiscount(selectedInstrument.getRentPerDay(), rentalDays);
+        double totalCost;
+
+        if (discountApply) {
+            totalCost = baseCost - discountAmount;
+        } else {
+            totalCost = baseCost;
+        }
+    
+        Rental newRental(rentalDays, totalCost, isCompleted ,selectedInstrument.getInstrumentID(), newID, customerID, "", "");
+        
+        setReturnDate(newRental, rentalDays);
         rentals.push_back(newRental);
 
         cout << "Rented instrument with the ID of " << newID << endl;
@@ -216,8 +278,43 @@ void SystemManager::rentInstrument(){
     }
 }
 
-void SystemManager::returnInstrument(string instrumentID)
-{
+void SystemManager::returnInstrument(){
+    string choice;
+    cout << "Type the rental ID you'd like to return: ";
+    cin >> choice;
+
+    // cant use range based for loops cause i need to use rental.erase to clear memory fuckkkkkkkkk
+    for (auto i = rentals.begin(); i != rentals.end(); i++){
+        if (choice == i->getRentalID()){
+            string instrumentId = i->getInstrumentID();
+            double rentPerDay = 0;
+            
+            for (Instrument& instrument : instruments){
+                if(instrument.getInstrumentID() == instrumentId){
+                    instrument.setIsAvailable(true);
+                    rentPerDay = instrument.getRentPerDay();
+                    break;
+                }
+            }
+
+            cout << i->getInstrumentID() << " returned!" << endl;
+
+            double totalCost = i->getTotalCost();
+            if(isOverdue(*i)){
+                double overDueFee = applyOverdueFee(rentPerDay, i->getRentalDays());
+                double finalCost = totalCost + overDueFee;
+                cout << "Rental cost: " << totalCost << "PHP" << endl;
+                cout << "Overdue fee: " << overDueFee << "PHP" << endl;
+                cout << "Total to pay: " << finalCost << "PHP" << endl;
+            }else{
+                cout << "Please pay " << totalCost << "PHP at the counter." << endl;
+            }
+
+            i->setIsCompleted(true);
+            return;
+        }
+    }
+    cout << "Rental ID not found." << endl;
 }
 
 void SystemManager::addInstrument(){
@@ -225,13 +322,14 @@ void SystemManager::addInstrument(){
     double rentPerDay;
     bool isAvailable = true;
 
+    cout << "----------------------------" << endl;
     cout << "Enter instrument name: ";
-    cin >> name;
+    getline(cin, name);
     cout << "Enter instrument brand: ";
-    cin >> brand;
+    getline(cin, brand);
     cout << "Enter Instrument model: ";
-    cin >> model;
-    cout << "Enter rent per day: ";
+    getline(cin, model);
+    cout << "Enter rent per day (PHP): ";
     cin >> rentPerDay;
 
     string newID = generateID(INSTRUMENT_PREFIX);
@@ -261,9 +359,22 @@ string SystemManager::generateID(string prefix){
     return id;
 }
 
+string SystemManager::getCurrentDate(){
+    // imma be fr this is AI
+    time_t now = time(nullptr);
+    tm localTime{};
+
+    localtime_s(&localTime, &now);  // Windows version
+
+    stringstream ss;
+    ss << put_time(&localTime, "%Y-%m-%d");
+    return ss.str();
+}
+
 void SystemManager::addCustomer(){
     string name, customerID, email, contactNumber;  
 
+    cout << "------------------------------" << endl;
     cout << "Enter your name: ";
     cin >> name;
     cout << "Enter your email address: ";
@@ -278,31 +389,89 @@ void SystemManager::addCustomer(){
     cout << "Added customer with the ID of '" << newID << "'" << endl;
 }
 
-string SystemManager::updateCustomerInfo()
-{
-return "";
-}
-
-double SystemManager::applyDiscount()
-{
-return 0;
-}
-
-double SystemManager::calculateTotalCost(double rentPerDay, int rentalDays){
-    return 0;
-}
-
-double SystemManager::calculateOverdueFee(double rentPerDay, int rentalDays){
-    return 0;
-}
-
-bool SystemManager::isOverdue(){
-    return false;
-}
-
-void SystemManager::setReturnDate(){
-}
-
-void SystemManager::displayRentalInfo(){
+void SystemManager::updateCustomerInfo(){
+    string updateChoice;
     
+    cout << "Type in customer ID you'd like to update: ";
+    cin >> updateChoice;
+
+    for(Customer& customer:customers){
+        if (updateChoice == customer.getCustomerID()){
+            string name, email, contactNumber;
+            
+            cout << "Enter your name: ";
+            cin >> name;
+            cout << "Enter your email address: ";
+            cin >> email;
+            cout << "Enter your contact number: ";
+            cin >> contactNumber;
+
+            customer.setName(name);
+            customer.setEmail(email);
+            customer.setContactNumber(contactNumber);
+
+            cout << "Customer Updated." << endl;
+            return;
+        }
+    }
+    cout << "Customer not found." << endl;
+}
+
+double SystemManager::applyDiscount(double rentPerDay, int rentalDays){
+    double baseCost = calculateBaseCost(rentPerDay, rentalDays);
+    return baseCost * 0.10; // 10% discounts
+}
+
+double SystemManager::calculateBaseCost(double rentPerDay, int rentalDays){
+    return(rentPerDay * rentalDays);
+}
+
+double SystemManager::applyOverdueFee(double rentPerDay, int rentalDays){
+    double baseCost = calculateBaseCost(rentPerDay, rentalDays);
+    return baseCost * 0.10;
+}
+
+bool SystemManager::isOverdue(const Rental &rental) {
+    return getCurrentDate() > rental.getReturnDate();
+}
+
+void SystemManager::setReturnDate(Rental& rental, int rentalDays){
+    // Made by AI
+    time_t now = time(nullptr);
+    tm localTime{};
+    localtime_s(&localTime, &now);
+
+    string rentalDate = getCurrentDate();
+    rental.setRentalDate(rentalDate);
+
+    localTime.tm_mday += rentalDays;
+    mktime(&localTime);
+
+    char buffer[20];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d", &localTime);
+    rental.setReturnDate(buffer);
+}
+
+void SystemManager::displayRentalInfo(const Rental& rental){
+    cout << "----------------------------------" << endl;
+    cout << "Rental ID: " << rental.getRentalID() << endl;
+    cout << "Rented Instrument ID: " << rental.getInstrumentID() << endl;
+    cout << "Days to be rented: " << rental.getRentalDays() << endl;
+    cout << "Rental Date: " << rental.getRentalDate() << endl;
+    cout << "Return Date: " << rental.getReturnDate() << endl;
+    cout << "Rented by: " << rental.getCustomerID() << endl;
+    cout << "Total cost: " << rental.getTotalCost() << "PHP" << endl;
+    cout << "Completed: " << (rental.getIsCompleted() ? "true" : "false") << endl;
+}
+
+void SystemManager::displayMenu(){
+    cout << "-------- Musical Instrument Rental System --------" << endl;
+    cout << "1. Add instrument" << endl;
+    cout << "2. Register Customer" << endl;
+    cout << "3. Rent Instrument" << endl;
+    cout << "4. Return Instrument" << endl;
+    cout << "5. View Available Instruments" << endl;
+    cout << "6. View Rental Records" << endl;
+    cout << "7. Update Customer Information" << endl;
+    cout << "8. Exit" << endl;
 }

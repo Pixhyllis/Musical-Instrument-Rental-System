@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
+
 using namespace std;
 
 //PREFIXES FOR GENERATEID()
@@ -79,28 +81,41 @@ class Rental
 private:
     int rentalDays;
     double totalCost;
+    bool isCompleted;
     string instrumentID;
     string rentalID;
     string customerID;
+    string rentalDate;
+    string returnDate;
 public:
     Rental(
         int rentalDays,
         double totalCost,
+        bool isCompleted,
         string instrumentID,
         string rentalID,
-        string customerID
+        string customerID,
+        string rentalDate,
+        string returnDate
     );
     ~Rental();
     int getRentalDays() const;
     double getTotalCost() const;
+    bool getIsCompleted() const;
     string getInstrumentID() const;
     string getRentalID() const;
     string getCustomerID() const;
+    string getRentalDate() const;
+    string getReturnDate() const;
     void setRentalDays(int rentalDays);
     void setTotalCost(double totalCost);
     void setInstrumentID(string instrumentID);
     void setRentalID(string rentalID);
     void setCustomerID(string customerID);
+    void setRentalDate(string rentalDate);
+    void setReturnDate(string returnDate);
+    void setIsCompleted(bool isCompleted);
+
 
 };
 
@@ -114,16 +129,18 @@ public:
     void displayAvailableInstruments();
     void displayAllRentals();
     void rentInstrument();
-    void returnInstrument(string instrumentID);
+    void returnInstrument();
     void addInstrument();
     void addCustomer();
     string generateID(string prefix);
-    string updateCustomerInfo();
-    double applyDiscount();
-    double calculateTotalCost(double rentPerDay, int rentalDays);
-    double calculateOverdueFee(double rentPerDay, int rentalDays);
-    bool isOverdue();
-    void setReturnDate();
-    void displayRentalInfo();
+    string getCurrentDate();
+    void updateCustomerInfo();
+    double applyDiscount(double rentPerDay, int rentalDays);
+    double calculateBaseCost(double rentPerDay, int rentalDays);
+    double applyOverdueFee(double rentPerDay, int rentalDays);
+    bool isOverdue(const Rental& rental);
+    void setReturnDate(Rental& rental, int rentalDays);
+    void displayRentalInfo(const Rental& rental);
+    void displayMenu();
 };
 #endif
