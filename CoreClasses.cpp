@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 // TODO: if no valid customer id, deny renting
@@ -235,7 +236,20 @@ void SystemManager::rentInstrument(){
     // TODO: check if customer has a valid ID, then proceed to rent
     cout << "Enter customer ID: ";
     cin >> customerID;
-
+    bool customerFound = false;
+    for (const Customer& customer : customers)
+    {
+        if (customer.getCustomerID() == customerID )
+        {
+            customerFound = true;
+            break;
+        }
+    }
+    if (!customerFound)
+    {
+        cout << "Customer ID not found." << endl;
+        return;
+    }
     displayAvailableInstruments();
     cout << "Select what Instrument you'd like to rent:";
     
@@ -248,7 +262,12 @@ void SystemManager::rentInstrument(){
         cout << "Selected: " << selectedInstrument.getName() << endl;
         cout << "How many days would you like to rent this instrument? ";
         cin >> rentalDays;
-        
+        // To confirm or Validate yung days ng rental
+        if(rentalDays <= 0)
+        {
+            cout << "Rental days must be greater than 0." << endl;
+            return;
+        }
         bool discountApply = false;
         cout << "Apply 10% discount? (1 for yes, 0 for no): ";
         cin >> discountApply;
@@ -463,6 +482,42 @@ void SystemManager::displayRentalInfo(const Rental& rental){
     cout << "Total cost: " << rental.getTotalCost() << "PHP" << endl;
     cout << "Completed: " << (rental.getIsCompleted() ? "true" : "false") << endl;
 }
+void SystemManager::searchInstrumentByBrand(){
+    string brand;
+    bool found = false;
+    cout << "Enter brand to search: ";
+    cin >> brand;
+    for (const Instrument& instrument : instruments)
+    {
+        if(instrument.getBrand() == brand)
+        {
+            cout << "---------------------------" << endl;
+            cout << "Instrument ID: " << instrument.getInstrumentID() << endl;
+            cout << "Name: " << instrument.getName() << endl;
+            cout << "Brand: " << instrument.getBrand() << endl;
+            cout << "Model: " << instrument.getModel() << endl;
+            cout << "Rent Per Day: " << instrument.getRentPerDay() << endl;
+            found = true;
+        }
+    }
+    if(!found)
+    {
+        cout << "No instrument found." << endl;
+    }
+}
+
+void SystemManager::sortInstrumentsByPrice(){
+    sort(
+        instrument.begin(),
+        instrument.end(),
+        [](const Instrument& a, const Instrument& b)
+        {
+            return a.getRentPerDay() < b.getRentPerDay();
+        }
+    );
+    cout << "Instruments sorted by price." << endl;
+    displayAvailableInstruments();
+}
 
 void SystemManager::displayMenu(){
     cout << "-------- Musical Instrument Rental System --------" << endl;
@@ -473,5 +528,7 @@ void SystemManager::displayMenu(){
     cout << "5. View Available Instruments" << endl;
     cout << "6. View Rental Records" << endl;
     cout << "7. Update Customer Information" << endl;
-    cout << "8. Exit" << endl;
+    cout << "8. Search Instrument By Brand" << endl;
+    cout << "9. Sort Instruments  By Price" << endl;
+    cout << "10. Exit" << endl;
 }

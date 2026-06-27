@@ -141,6 +141,9 @@ public:
     bool isOverdue(const Rental& rental);
     void setReturnDate(Rental& rental, int rentalDays);
     void displayRentalInfo(const Rental& rental);
+    void searchInstrumentByBrand();
+    void sortInstrumentsByPrice();
     void displayMenu();
 };
+
 #endif

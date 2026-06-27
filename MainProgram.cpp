@@ -36,13 +36,16 @@ int main(){
                 system.updateCustomerInfo();
                 break;
             case 8:
+                system.searchInstrumentByBrand();
+                break;
+            case 9:
+                system.sortInstrumentsByPrice();
+                break;
+            case 10:
                 cout << "Bye Bye!" << endl;
                 break;
-            default:
-                cout << "Invalid Input." << endl;
-                break;
             }
-    } while (choice != 8);
+    } while (choice != 10);
     return 0;
 }
 
