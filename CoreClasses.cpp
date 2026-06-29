@@ -208,17 +208,21 @@ void SystemManager::displayAvailableInstruments(){
             found = true;
             cout << "---------------------------------" << endl;
             cout << "INSTRUMNET NO. " << i + 1 << endl;
-            cout << "Instrument ID: " << instruments[i].getInstrumentID() << endl;
-            cout << "Name: " << instruments[i].getName() << endl;
-            cout << "Brand: " << instruments[i].getBrand() << endl;
-            cout << "Model: " << instruments[i].getModel() << endl;
-            cout << "Rent per day: " << instruments[i].getRentPerDay() << endl;
-            cout << endl;
+            displayInstrument(instruments[i]);
         }
     }
     if(!found){
         cout << "No available instrument found." << endl;
     }
+}
+
+void SystemManager::displayInstrument(const Instrument& instruments){ 
+    cout << "Instrument ID: " << instruments.getInstrumentID() << endl;
+    cout << "Name: " << instruments.getName() << endl;
+    cout << "Brand: " << instruments.getBrand() << endl;
+    cout << "Model: " << instruments.getModel() << endl;
+    cout << "Rent per day: " << instruments.getRentPerDay() << endl;
+    cout << endl;
 }
 
 void SystemManager::displayAllRentals(){
@@ -272,8 +276,8 @@ void SystemManager::rentInstrument(){
         cout << "Apply 10% discount? (1 for yes, 0 for no): ";
         cin >> discountApply;
 
-        selectedInstrument.setIsAvailable(false);
-
+        instruments[selectedIndex].setIsAvailable(false);
+        
         string newID = generateID(RENTAL_PREFIX);
         double baseCost = calculateBaseCost(selectedInstrument.getRentPerDay(), rentalDays);
         double discountAmount = applyDiscount(selectedInstrument.getRentPerDay(), rentalDays);
@@ -491,13 +495,8 @@ void SystemManager::searchInstrumentByBrand(){
     {
         if(instrument.getBrand() == brand)
         {
-            cout << "---------------------------" << endl;
-            cout << "Instrument ID: " << instrument.getInstrumentID() << endl;
-            cout << "Name: " << instrument.getName() << endl;
-            cout << "Brand: " << instrument.getBrand() << endl;
-            cout << "Model: " << instrument.getModel() << endl;
-            cout << "Rent Per Day: " << instrument.getRentPerDay() << endl;
             found = true;
+            displayInstrument(instrument);
         }
     }
     if(!found)
@@ -508,8 +507,8 @@ void SystemManager::searchInstrumentByBrand(){
 
 void SystemManager::sortInstrumentsByPrice(){
     sort(
-        instrument.begin(),
-        instrument.end(),
+        instruments.begin(),
+        instruments.end(),
         [](const Instrument& a, const Instrument& b)
         {
             return a.getRentPerDay() < b.getRentPerDay();

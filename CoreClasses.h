@@ -127,6 +127,7 @@ private:
     vector<Rental> rentals;
 public:
     void displayAvailableInstruments();
+    void displayInstrument(const Instrument& instruments);
     void displayAllRentals();
     void rentInstrument();
     void returnInstrument();
