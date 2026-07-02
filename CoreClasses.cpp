@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 
 // TODO: if no valid customer id, deny renting
