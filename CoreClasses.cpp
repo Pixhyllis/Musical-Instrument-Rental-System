@@ -227,6 +227,21 @@ void SystemManager::saveData(){
     }
     myCustData.close();
     
+    ofstream myRentData("RentData.txt");
+    if(myRentData.is_open()){
+        for (int i = 0; i < rentals.size(); i++){
+            myRentData << rentals[i].getRentalDays() << "|" 
+                       << rentals[i].getTotalCost() << "|"
+                       << rentals[i].getIsCompleted() << "|"
+                       << rentals[i].getInstrumentID() << "|"
+                       << rentals[i].getRentalID() << "|"
+                       << rentals[i].getCustomerID() << "|"
+                       << rentals[i].getRentalDate() << "|"
+                       << rentals[i].getReturnDate() << endl;
+        }
+    }
+
+    myRentData.close();
 }
 
 void SystemManager::loadData(){
@@ -353,7 +368,7 @@ void SystemManager::rentInstrument(){
         return;
     }
     displayAvailableInstruments();
-    cout << "Select what Instrument you'd like to rent:";
+    cout << "Select what Instrument you'd like to rent:"; // Please change this
     
     cin >> userChoice;
     int selectedIndex = userChoice - 1;
