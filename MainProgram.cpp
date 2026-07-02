@@ -12,7 +12,7 @@ int main(){
 
     do
     {
-        cout << "This version works!! 4.42" << endl;
+        cout << "This version works!! 4.54" << endl;
         
         system.displayMenu();
         cout << "Type in your choice: ";

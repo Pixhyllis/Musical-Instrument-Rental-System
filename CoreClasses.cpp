@@ -274,7 +274,6 @@ void SystemManager::loadData(){
                     }                                  
                 }
             }
-            cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
     }else{
         cout << "No Instruments data found... Starting with an empty data " << endl;
     }
@@ -306,12 +305,55 @@ void SystemManager::loadData(){
                         }
                 }
             }
-            cout << "NUMBER OF CUSTOMERS: " << customers.size() << endl;
         }else{
             cout << "No Customers data found... Starting with an empty data " << endl;
         }
 
         myCustData.close();
+
+    ifstream myRentData("RentData.txt");
+
+        if(myRentData.is_open()){
+            rentals.clear();
+
+            cout << "Loading Rentals Data... " << endl;
+
+            string RentDaysStr, TotalCostStr, CompleteStr, InstID, RentID, CustID, RentDate, ReturnDate;
+
+            while(getline(myRentData, RentDaysStr, '|')){
+                getline(myRentData, TotalCostStr, '|');
+                getline(myRentData, CompleteStr, '|');
+                getline(myRentData, InstID, '|');
+                getline(myRentData, RentID, '|');
+                getline(myRentData, CustID, '|');
+                getline(myRentData, RentDate, '|');
+                getline(myRentData, ReturnDate);
+
+                int RentalDays = stoi(RentDaysStr);
+                double TotalCost = stod(TotalCostStr);
+                bool IsCompleted = (CompleteStr=="1");
+
+                Rental rental(RentalDays, TotalCost, IsCompleted, InstID, RentID, CustID, RentDate, ReturnDate);
+
+                rentals.push_back(rental);
+
+                if(RentID.rfind(RENTAL_PREFIX, 0) == 0){
+                    int number = stoi(RentID.substr(RENTAL_PREFIX.size()));
+                    if(number > rentalCounter){
+                        rentalCounter = number;
+                    }
+                }
+            }
+        }else{
+            cout << "No Rentals data found... Starting with an empty data " << endl;
+        }
+    
+    myRentData.close();
+
+    cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
+    cout << "NUMBER OF CUSTOMERS: " << customers.size() << endl;
+    cout << "NUMBER OF RENTALS: " << rentals.size() << endl;
+
 }
 
 void SystemManager::displayAvailableInstruments(){
