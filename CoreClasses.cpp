@@ -202,13 +202,64 @@ void Rental::setIsCompleted(bool isCompleted){
 }
 // ------------------------- SystemManager ---------------------------------
 
+void SystemManager::saveData(){
+    ofstream myData("Data.txt");
+    if (myData.is_open()){ 
+        for(int i = 0; i < instruments.size(); i++){
+            myData << instruments[i].getName() << "|"
+                   << instruments[i].getBrand() << "|"
+                   << instruments[i].getModel() << "|"
+                   << instruments[i].getInstrumentID() << "|"
+                   << instruments[i].getRentPerDay() << "|"
+                   << instruments[i].getIsAvailable() << endl;
+        };
+    }
+    myData.close();
+
+    
+}
+
+void SystemManager::loadData(){
+    ifstream myData("Data.txt");  
+
+    if(myData.is_open()){
+
+        instruments.clear();
+
+        cout << "Loading Data... " << endl;
+        string name, brand, model, ID, RentStr, AvailableStr; 
+
+        while(getline(myData, name, '|')){
+            getline(myData, brand, '|');
+            getline(myData, model, '|');
+            getline(myData, ID, '|');
+            getline(myData, RentStr, '|');
+            getline(myData, AvailableStr);
+
+            double rent = stod(RentStr);
+            bool available = (AvailableStr == "1");
+
+            Instrument instrument(name, brand, model, ID, rent, available);
+
+            instruments.push_back(instrument);
+        }
+        cout << "NUMBER OFINSTRUMENTS: " << instruments.size() << endl;
+    }
+    
+    else{
+        cout << "No data found... Starting with an empty data " << endl;
+    }
+    
+    myData.close();
+}
+
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
     for (int i = 0; i < instruments.size(); i++){
         if (instruments[i].getIsAvailable()){
             found = true;
             cout << "---------------------------------" << endl;
-            cout << "INSTRUMNET NO. " << i + 1 << endl;
+            cout << "INSTRUMENT NO. " << i + 1 << endl;
             displayInstrument(instruments[i]);
         }
     }

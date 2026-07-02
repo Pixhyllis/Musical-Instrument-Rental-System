@@ -6,9 +6,14 @@ using namespace std;
 int main(){
     SystemManager system;
     int choice;
+
+    system.loadData();
     
+
     do
     {
+        cout << "This version works!! 3.10" << endl;
+        
         system.displayMenu();
         cout << "Type in your choice: ";
         cin >> choice;
@@ -43,6 +48,7 @@ int main(){
                 system.sortInstrumentsByPrice();
                 break;
             case 10:
+                system.saveData();
                 cout << "Bye Bye!" << endl;
                 break;
             }

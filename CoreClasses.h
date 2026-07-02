@@ -127,6 +127,8 @@ private:
     vector<Customer> customers;
     vector<Rental> rentals;
 public:
+    void saveData(); 
+    void loadData(); 
     void displayAvailableInstruments();
     void displayInstrument(const Instrument& instruments);
     void displayAllRentals();
