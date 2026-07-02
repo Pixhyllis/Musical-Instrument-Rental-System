@@ -20,8 +20,8 @@ int main(){
                 break;
             case 2:
                 system.addCustomer();
-                break;
-            case 3:
+
+                case 3:
                 system.rentInstrument();
                 break;
             case 4:
