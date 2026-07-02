@@ -230,44 +230,73 @@ void SystemManager::saveData(){
 }
 
 void SystemManager::loadData(){
-    ifstream myData("Data.txt");  
+    ifstream myInsData("InsData.txt");  
+        if(myInsData.is_open()){
 
-    if(myData.is_open()){
+            instruments.clear();
 
-        instruments.clear();
+            cout << "Loading Instruments Data... " << endl;
+            string name, brand, model, ID, RentStr, AvailableStr; 
 
-        cout << "Loading Data... " << endl;
-        string name, brand, model, ID, RentStr, AvailableStr; 
+            while(getline(myInsData, name, '|')){
+                getline(myInsData, brand, '|');
+                getline(myInsData, model, '|');
+                getline(myInsData, ID, '|');
+                getline(myInsData, RentStr, '|');
+                getline(myInsData, AvailableStr);
 
-        while(getline(myData, name, '|')){
-            getline(myData, brand, '|');
-            getline(myData, model, '|');
-            getline(myData, ID, '|');
-            getline(myData, RentStr, '|');
-            getline(myData, AvailableStr);
+                double rent = stod(RentStr);
+                bool available = (AvailableStr == "1");
 
-            double rent = stod(RentStr);
-            bool available = (AvailableStr == "1");
+                Instrument instrument(name, brand, model, ID, rent, available);
 
-            Instrument instrument(name, brand, model, ID, rent, available);
-
-            instruments.push_back(instrument);
-           
-            if(ID.rfind(INSTRUMENT_PREFIX, 0) == 0){
-                int number = stoi(ID.substr(INSTRUMENT_PREFIX.size()));  //INSTRUMENT_PREFIX.size = 4 INST= 4 characters
-                if(number > instrumentCounter){
-                    instrumentCounter = number;
-                }                                  
+                instruments.push_back(instrument);
+            
+                if(ID.rfind(INSTRUMENT_PREFIX, 0) == 0){ //if it finds INST, it will return 0
+                    int number = stoi(ID.substr(INSTRUMENT_PREFIX.size()));  //INSTRUMENT_PREFIX.size = 4 INST= 4 characters. Therefore, number == index 4 of the ID
+                    if(number > instrumentCounter){
+                        instrumentCounter = number;
+                    }                                  
+                }
             }
+            cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
+    }else{
+        cout << "No Instruments data found... Starting with an empty data " << endl;
+    }
+    
+    myInsData.close();
+
+    ifstream myCustData("CustData.txt");
+        if(myCustData.is_open()){
+
+            customers.clear();
+            
+            cout << "Loading Customers Data... " << endl;
+
+            string name, customerID, email, contactNumber;
+
+            while(getline(myCustData, name, '|')){
+                getline(myCustData, customerID, '|');
+                getline(myCustData, email, '|');
+                getline(myCustData, contactNumber);
+            
+                Customer customer(name, customerID, email, contactNumber);
+
+                customers.push_back(customer);
+
+                if(customerID.rfind(CUSTOMER_PREFIX, 0) == 0){
+                    int number = stoi(customerID.substr(CUSTOMER_PREFIX.size()));
+                        if(number > customerCounter){
+                        customerCounter = number;
+                        }
+                }
+            }
+            cout << "NUMBER OF CUSTOMERS: " << customers.size() << endl;
+        }else{
+            cout << "No Customers data found... Starting with an empty data " << endl;
         }
-        cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
-    }
-    
-    else{
-        cout << "No data found... Starting with an empty data " << endl;
-    }
-    
-    myData.close();
+
+        myCustData.close();
 }
 
 void SystemManager::displayAvailableInstruments(){
