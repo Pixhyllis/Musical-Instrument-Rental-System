@@ -203,10 +203,10 @@ void Rental::setIsCompleted(bool isCompleted){
 // ------------------------- SystemManager ---------------------------------
 
 void SystemManager::saveData(){
-    ofstream myData("Data.txt");
-    if (myData.is_open()){ 
+    ofstream myInsData("InsData.txt");
+    if (myInsData.is_open()){ 
         for(int i = 0; i < instruments.size(); i++){
-            myData << instruments[i].getName() << "|"
+            myInsData << instruments[i].getName() << "|"
                    << instruments[i].getBrand() << "|"
                    << instruments[i].getModel() << "|"
                    << instruments[i].getInstrumentID() << "|"
@@ -214,8 +214,18 @@ void SystemManager::saveData(){
                    << instruments[i].getIsAvailable() << endl;
         };
     }
-    myData.close();
+    myInsData.close();
 
+    ofstream myCustData("CustData.txt");
+    if (myCustData.is_open()){ 
+        for(int i = 0; i < customers.size(); i++){
+            myCustData << customers[i].getName() << "|"
+                   <<  customers[i].getCustomerID()<< "|"
+                   << customers[i].getEmail() << "|"
+                   << customers[i].getContactNumber() << endl;
+        };
+    }
+    myCustData.close();
     
 }
 
@@ -454,7 +464,7 @@ void SystemManager::addCustomer(){
 
     cout << "------------------------------" << endl;
     cout << "Enter your name: ";
-    cin >> name;
+    getline(cin, name);
     cout << "Enter your email address: ";
     cin >> email;
     cout << "Enter your contact number: ";
@@ -541,6 +551,7 @@ void SystemManager::displayRentalInfo(const Rental& rental){
     cout << "Total cost: " << rental.getTotalCost() << "PHP" << endl;
     cout << "Completed: " << (rental.getIsCompleted() ? "true" : "false") << endl;
 }
+
 void SystemManager::searchInstrumentByBrand(){
     string brand;
     bool found = false;
