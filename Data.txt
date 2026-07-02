@@ -1,2 +1,4 @@
-Yamaha Pacifica|YAMAHA|PAC112VM|INST1|1200|1
-Yamaha|e|d|INST1|1200|1
+Guitar|Yamaha|Guitar|INST1|100|1
+Guitar|Yamaha|Guitar|INST2|100|1
+Bass|Bass Store idk|Bass|INST3|100|1
+tite|tite|tite|INST4|1|1

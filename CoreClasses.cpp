@@ -242,8 +242,15 @@ void SystemManager::loadData(){
             Instrument instrument(name, brand, model, ID, rent, available);
 
             instruments.push_back(instrument);
+           
+            if(ID.rfind(INSTRUMENT_PREFIX, 0) == 0){
+                int number = stoi(ID.substr(INSTRUMENT_PREFIX.size()));  //INSTRUMENT_PREFIX.size = 4 INST= 4 characters
+                if(number > instrumentCounter){
+                    instrumentCounter = number;
+                }                                  
+            }
         }
-        cout << "NUMBER OFINSTRUMENTS: " << instruments.size() << endl;
+        cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
     }
     
     else{
@@ -416,10 +423,6 @@ void SystemManager::addInstrument(){
 }
 
 string SystemManager::generateID(string prefix){
-    static int instrumentCounter = 0;
-    static int customerCounter = 0;
-    static int rentalCounter = 0;
-
     string id = prefix;
     if(prefix == INSTRUMENT_PREFIX){
         instrumentCounter++;

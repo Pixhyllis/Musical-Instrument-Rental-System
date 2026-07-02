@@ -126,6 +126,9 @@ private:
     vector<Instrument> instruments;
     vector<Customer> customers;
     vector<Rental> rentals;
+    int instrumentCounter = 0;
+    int customerCounter = 0;
+    int rentalCounter = 0;
 public:
     void saveData(); 
     void loadData(); 
