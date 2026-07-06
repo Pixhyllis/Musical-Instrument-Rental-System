@@ -366,6 +366,7 @@ void SystemManager::displayAvailableInstruments(){
             displayInstrument(instruments[i]);
         }
     }
+    cout << "-----------------------" << endl;
     if(!found){
         cout << "No available instrument found." << endl;
     }
@@ -410,7 +411,7 @@ void SystemManager::rentInstrument(){
         return;
     }
     displayAvailableInstruments();
-    cout << "Select what Instrument you'd like to rent:"; // Please change this
+    cout << "Select the Instrument Number you'd like to rent:"; // Please change this
     
     cin >> userChoice;
     int selectedIndex = userChoice - 1;
@@ -514,8 +515,9 @@ void SystemManager::addInstrument(){
 
     Instrument newInstrument(name, brand, model, newID, rentPerDay, isAvailable);
     instruments.push_back(newInstrument);
-
+    cout << endl;
     cout << "Instrument added with the ID of '" << newID << "'" << endl;
+    cout << "----------------------------" << endl;
 }
 
 string SystemManager::generateID(string prefix){
@@ -560,7 +562,8 @@ void SystemManager::addCustomer(){
     Customer newCustomer(name, newID, email, contactNumber);
     customers.push_back(newCustomer);
 
-    cout << "Added customer with the ID of '" << newID << "'" << endl;
+    cout << endl << "Added customer with the ID of '" << newID << "'" << endl;
+    cout << "----------------------------" << endl;
 }
 
 void SystemManager::updateCustomerInfo(){

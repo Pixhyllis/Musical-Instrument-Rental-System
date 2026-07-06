@@ -9,10 +9,11 @@ int main(){
 
     system.loadData();
     
+    cout << "This version works!! 4.54" << endl << endl;
 
     do
     {
-        cout << "This version works!! 4.54" << endl;
+        cout << endl;
         
         system.displayMenu();
         cout << "Type in your choice: ";
