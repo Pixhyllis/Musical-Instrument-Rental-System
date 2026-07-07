@@ -26,6 +26,7 @@ FEATURES TO ADD
 - [ ] Report (daily income, list of currently rented instruments, rental history)
 - [ ] Exception handling (if instrument unavailable type shit)
 - [ ] Data validation (make sure that the customer exists before renting, and prevent renting an invalid amount of time; renting days <0)
+- [ ] Queue Rental Waiting list (PRIORITY, if a customer wants to rent an unavailable instrument, put them in a waiting list)
 
 
 OPTIONAL THINGS TO ADD:
