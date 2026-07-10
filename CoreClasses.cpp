@@ -398,20 +398,22 @@ void SystemManager::rentInstrument(){
     // TODO: check if customer has a valid ID, then proceed to rent
     cout << "Enter customer ID: ";
     cin >> customerID;
+
     bool customerFound = false;
-    for (const Customer& customer : customers)
-    {
-        if (customer.getCustomerID() == customerID )
-        {
+
+    for (const Customer& customer : customers){
+        if (customer.getCustomerID() == customerID ){
             customerFound = true;
             break;
         }
     }
+
     if (!customerFound)
     {
         cout << "Customer ID not found." << endl;
         return;
     }
+
     displayAvailableInstruments();
     cout << "Select the Instrument Number you'd like to rent:"; // Please change this
     cin >> userChoice;
@@ -674,7 +676,7 @@ void SystemManager::sortInstrumentsByPrice(){
             return a.getRentPerDay() < b.getRentPerDay();
         }
     );
-    
+
     cout << "Instruments sorted by price." << endl;
     displayAvailableInstruments();
 }
