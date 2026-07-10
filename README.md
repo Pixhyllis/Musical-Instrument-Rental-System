@@ -19,11 +19,11 @@ BASIC SYSTEM / CORE CLASSES
 - A class to manage what's above ^^^
 
 FEATURES TO ADD
-- [ ] File handling
+- [x] File handling
 - [x] Unique ID generation for renting
 - [ ] Search & Filter (brand/model, available instruments, who's renting what instrument)
-- [ ] Sorting (instrument rent price, rental date, customers' names)
-- [ ] Report (daily income, list of currently rented instruments, rental history)
+- [x] Sorting (instrument rent price,~~ rental date, customers' names~~)
+- [x] Report (~~daily income,~~ list of currently rented instruments, rental history)
 - [ ] Exception handling (if instrument unavailable type shit)
 - [ ] Data validation (make sure that the customer exists before renting, and prevent renting an invalid amount of time; renting days <0)
 - [ ] Queue Rental Waiting list (PRIORITY, if a customer wants to rent an unavailable instrument, put them in a waiting list)

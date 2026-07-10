@@ -205,39 +205,39 @@ void Rental::setIsCompleted(bool isCompleted){
 void SystemManager::saveData(){
     ofstream myInsData("InsData.txt");
     if (myInsData.is_open()){ 
-        for(int i = 0; i < instruments.size(); i++){
-            myInsData << instruments[i].getName() << "|"
-                   << instruments[i].getBrand() << "|"
-                   << instruments[i].getModel() << "|"
-                   << instruments[i].getInstrumentID() << "|"
-                   << instruments[i].getRentPerDay() << "|"
-                   << instruments[i].getIsAvailable() << endl;
+        for(const auto& instrument : instruments){
+            myInsData   << instrument.getName() << "|"
+                        << instrument.getBrand() << "|"
+                        << instrument.getModel() << "|"
+                        << instrument.getInstrumentID() << "|"
+                        << instrument.getRentPerDay() << "|"
+                        << instrument.getIsAvailable() << endl;
         };
     }
     myInsData.close();
 
     ofstream myCustData("CustData.txt");
     if (myCustData.is_open()){ 
-        for(int i = 0; i < customers.size(); i++){
-            myCustData << customers[i].getName() << "|"
-                   <<  customers[i].getCustomerID()<< "|"
-                   << customers[i].getEmail() << "|"
-                   << customers[i].getContactNumber() << endl;
+        for(const auto& customer : customers){
+            myCustData  << customer.getName() << "|"
+                        << customer.getCustomerID()<< "|"
+                        << customer.getEmail() << "|"
+                        << customer.getContactNumber() << endl;
         };
     }
     myCustData.close();
     
     ofstream myRentData("RentData.txt");
     if(myRentData.is_open()){
-        for (int i = 0; i < rentals.size(); i++){
-            myRentData << rentals[i].getRentalDays() << "|" 
-                       << rentals[i].getTotalCost() << "|"
-                       << rentals[i].getIsCompleted() << "|"
-                       << rentals[i].getInstrumentID() << "|"
-                       << rentals[i].getRentalID() << "|"
-                       << rentals[i].getCustomerID() << "|"
-                       << rentals[i].getRentalDate() << "|"
-                       << rentals[i].getReturnDate() << endl;
+        for (const auto& rental : rentals){
+            myRentData << rental.getRentalDays() << "|" 
+                       << rental.getTotalCost() << "|"
+                       << rental.getIsCompleted() << "|"
+                       << rental.getInstrumentID() << "|"
+                       << rental.getRentalID() << "|"
+                       << rental.getCustomerID() << "|"
+                       << rental.getRentalDate() << "|"
+                       << rental.getReturnDate() << endl;
         }
     }
 
@@ -358,12 +358,14 @@ void SystemManager::loadData(){
 
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
-    for (int i = 0; i < instruments.size(); i++){
-        if (instruments[i].getIsAvailable()){
+    int displayNumber = 1;
+    for (const auto& instrument : instruments){
+        if (instrument.getIsAvailable()){
             found = true;
             cout << "---------------------------------" << endl;
-            cout << "INSTRUMENT NO. " << i + 1 << endl;
-            displayInstrument(instruments[i]);
+            cout << "INSTRUMENT NO. " << displayNumber << endl;
+            displayInstrument(instrument);
+            displayNumber++;
         }
     }
     cout << "-----------------------" << endl;
@@ -412,49 +414,55 @@ void SystemManager::rentInstrument(){
     }
     displayAvailableInstruments();
     cout << "Select the Instrument Number you'd like to rent:"; // Please change this
-    
     cin >> userChoice;
-    int selectedIndex = userChoice - 1;
 
-    if(selectedIndex >= 0 && selectedIndex < instruments.size()){
-        Instrument selectedInstrument = instruments[selectedIndex];
-        
-        cout << "Selected: " << selectedInstrument.getName() << endl;
-        cout << "How many days would you like to rent this instrument? ";
-        cin >> rentalDays;
-        // To confirm or Validate yung days ng rental
-        if(rentalDays <= 0)
-        {
-            cout << "Rental days must be greater than 0." << endl;
-            return;
-        }
-        bool discountApply = false;
-        cout << "Apply 10% discount? (1 for yes, 0 for no): ";
-        cin >> discountApply;
-
-        instruments[selectedIndex].setIsAvailable(false);
-        
-        string newID = generateID(RENTAL_PREFIX);
-        double baseCost = calculateBaseCost(selectedInstrument.getRentPerDay(), rentalDays);
-        double discountAmount = applyDiscount(selectedInstrument.getRentPerDay(), rentalDays);
-        double totalCost;
-
-        if (discountApply) {
-            totalCost = baseCost - discountAmount;
-        } else {
-            totalCost = baseCost;
-        }
-    
-        Rental newRental(rentalDays, totalCost, isCompleted ,selectedInstrument.getInstrumentID(), newID, customerID, "", "");
-        
-        setReturnDate(newRental, rentalDays);
-        rentals.push_back(newRental);
-
-        cout << "Rented instrument with the ID of " << newID << endl;
-    
-    }else{
+    if (userChoice <= 0){
         cout << "Input a valid number." << endl;
+        return;
     }
+
+    auto it = instruments.begin();
+    int currentAvailableNumber = 1;
+
+    while(it != instruments.end()){
+        if(it->getIsAvailable()){
+            if(currentAvailableNumber == userChoice){
+                break;
+            }
+            currentAvailableNumber++;
+        }
+        ++it;
+    }
+
+    if (it == instruments.end() || !it->getIsAvailable()){
+        cout << "Input a valid number." << endl;
+        return;
+    }
+
+    cout << "Selected: " << it->getName() << endl;
+    cout << "How many days would you like to rent this instrument? ";
+    cin >> rentalDays;
+
+    if (rentalDays <= 0){
+        cout << "Rental days must be greater than 0." << endl;
+        return;
+    }
+    
+    bool discountApplied = false;
+    cout << "Apply 10% discount? (1 for yes, 0 for no): ";
+    cin >> discountApplied;
+
+    it->setIsAvailable(false);
+
+    string newID = generateID(RENTAL_PREFIX);
+    double baseCost = calculateBaseCost(it->getRentPerDay(), rentalDays);
+    double discountAmmount = applyDiscount(it->getRentPerDay(), rentalDays);
+    double totalCost = discountApplied ? baseCost - discountAmmount : baseCost;
+
+    Rental newRental(rentalDays, totalCost, isCompleted, it->getInstrumentID(), newID, customerID, "", "");
+    setReturnDate(newRental, rentalDays);
+    rentals.push_back(newRental);
+    cout << "Rented instrument with the ID of " << newID << endl;    
 }
 
 void SystemManager::returnInstrument(){
@@ -661,14 +669,12 @@ void SystemManager::searchInstrumentByBrand(){
 }
 
 void SystemManager::sortInstrumentsByPrice(){
-    sort(
-        instruments.begin(),
-        instruments.end(),
-        [](const Instrument& a, const Instrument& b)
-        {
+    instruments.sort(
+        [](const Instrument& a, const Instrument& b){
             return a.getRentPerDay() < b.getRentPerDay();
         }
     );
+    
     cout << "Instruments sorted by price." << endl;
     displayAvailableInstruments();
 }

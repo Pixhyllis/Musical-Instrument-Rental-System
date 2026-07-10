@@ -3,7 +3,7 @@
 #define CORECLASSES_H
 #include <iostream>
 #include <string>
-#include <vector>
+#include <list>
 #include <fstream>
 
 
@@ -123,9 +123,9 @@ public:
 class SystemManager
 {
 private:
-    vector<Instrument> instruments;
-    vector<Customer> customers;
-    vector<Rental> rentals;
+    list<Instrument> instruments;
+    list<Customer> customers;
+    list<Rental> rentals;
     int instrumentCounter = 0;
     int customerCounter = 0;
     int rentalCounter = 0;
