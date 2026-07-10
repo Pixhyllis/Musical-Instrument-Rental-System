@@ -149,7 +149,9 @@ public:
     void setReturnDate(Rental& rental, int rentalDays);
     void displayRentalInfo(const Rental& rental);
     void searchInstrumentByBrand();
-    void sortInstrumentsByPrice();
+    void searchInstrumentByModel();
+    void displayWhoRentedWhat();
+    void sortInstrumentsByPrice(); 
     void displayMenu();
 };
 

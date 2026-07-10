@@ -46,14 +46,20 @@ int main(){
                 system.searchInstrumentByBrand();
                 break;
             case 9:
-                system.sortInstrumentsByPrice();
+                system.searchInstrumentByModel();
                 break;
             case 10:
+                system.displayWhoRentedWhat();
+                break;
+            case 11:
+                system.sortInstrumentsByPrice();
+                break;
+            case 12:
                 system.saveData();
                 cout << "Bye Bye!" << endl;
                 break;
             }
-    } while (choice != 10);
+    } while (choice != 12);
     return 0;
 }
 

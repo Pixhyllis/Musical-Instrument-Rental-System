@@ -669,7 +669,48 @@ void SystemManager::searchInstrumentByBrand(){
         cout << "No instrument found." << endl;
     }
 }
+void SystemManager::searchInstrumentByModel(){
+    string model;
+    bool found = false;
 
+    cout << "Enter model to search: ";
+    cin >> model;
+
+    for(const Instrument& instrument : instruments)
+    {
+        if(instrument.getModel() == model)
+        {
+            found = true;
+            displayInstrument(instrument);
+        }
+    }
+
+    if(!found)
+    {
+        cout << "No instrument found." << endl;
+    }
+}
+void SystemManager::displayWhoRentedWhat(){
+    bool found = false;
+
+    for(const Rental& rental : rentals)
+    {
+        if(!rental.getIsCompleted())
+        {
+            found = true;
+
+            cout << "Rental ID: " << rental.getRentalID() << endl;
+            cout << "Customer ID: " << rental.getCustomerID() << endl;
+            cout << "Instrument ID: " << rental.getInstrumentID() << endl;
+            cout << "------------------------" << endl;
+        }
+    }
+
+    if(!found)
+    {
+        cout << "No active rentals found." << endl;
+    }
+}
 void SystemManager::sortInstrumentsByPrice(){
     instruments.sort(
         [](const Instrument& a, const Instrument& b){
@@ -691,6 +732,8 @@ void SystemManager::displayMenu(){
     cout << "6. View Rental Records" << endl;
     cout << "7. Update Customer Information" << endl;
     cout << "8. Search Instrument By Brand" << endl;
-    cout << "9. Sort Instruments  By Price" << endl;
-    cout << "10. Exit" << endl;
+    cout << "9. Search Instrument By Model" << endl;
+    cout << "10. View Who Rented What" << endl;
+    cout << "11. Sort Instruments  By Price" << endl;
+    cout << "12. Exit" << endl;
 }
