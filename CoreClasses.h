@@ -13,6 +13,18 @@ using namespace std;
 const string INSTRUMENT_PREFIX = "INST";
 const string CUSTOMER_PREFIX = "CUST";
 const string RENTAL_PREFIX = "RENT";
+const string WAITING_PREFIX = "WAIT";
+
+//STRUCTURE FOR WAITING QUEUE
+struct WaitingRequest
+{
+    string queueID;
+    string customerID;
+    string customerName;
+    string instrumentID;
+    string instrumentName;
+    string requestDate;
+};
 
 //CORE CLASSES
 class Instrument
@@ -126,13 +138,17 @@ private:
     list<Instrument> instruments;
     list<Customer> customers;
     list<Rental> rentals;
+    list<WaitingRequest> waitingQueue;
     int instrumentCounter = 0;
     int customerCounter = 0;
     int rentalCounter = 0;
+    int waitingCounter = 0;
+
 public:
     void saveData(); 
     void loadData(); 
     void displayAvailableInstruments();
+    void displayAllInstruments();
     void displayInstrument(const Instrument& instruments);
     void displayAllRentals();
     void rentInstrument();
@@ -152,6 +168,11 @@ public:
     void searchInstrumentByModel();
     void displayWhoRentedWhat();
     void sortInstrumentsByPrice(); 
+    void saveQueuedata();
+    void loadQueuedata();
+    void displayWaitingQueue();
+    void enqueueWaitingCustomer(const string& customerID, const string& customerName, const string& instrumentID, const string& instrumentName);
+    void processWaitingQueueForInstrument(const string& instrumentID);
     void displayMenu();
 };
 

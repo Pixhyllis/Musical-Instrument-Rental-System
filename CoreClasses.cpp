@@ -242,6 +242,17 @@ void SystemManager::saveData(){
     }
 
     myRentData.close();
+    saveQueuedata();
+}
+
+void SystemManager::saveQueuedata(){
+    ofstream myQueueData("QueueData.txt");
+    if(myQueueData.is_open()){
+        for(const auto& request:waitingQueue){
+            myQueueData << request.queueID << "|" << request.customerID << "|" << request.customerName << "|" << request.instrumentID << "|" << request.instrumentName << "|" << request.requestDate << endl;
+        }
+    }
+    myQueueData.close();
 }
 
 void SystemManager::loadData(){
@@ -353,9 +364,97 @@ void SystemManager::loadData(){
     cout << "NUMBER OF INSTRUMENTS: " << instruments.size() << endl;
     cout << "NUMBER OF CUSTOMERS: " << customers.size() << endl;
     cout << "NUMBER OF RENTALS: " << rentals.size() << endl;
-
+    
+    loadQueuedata();
 }
 
+void SystemManager::loadQueuedata(){
+    ifstream myQueueData("QueueData.txt");
+    if (myQueueData.is_open()){
+        waitingQueue.clear();
+
+        cout << "Loading Queue..." << endl;
+
+        string queueID, customerID, customerName, instrumentID, instrumentName, requestDate;
+
+        while(getline(myQueueData, queueID, '|')){
+            getline(myQueueData, customerID, '|');
+            getline(myQueueData, customerName, '|');
+            getline(myQueueData, instrumentID, '|');
+            getline(myQueueData, instrumentName, '|');
+            getline(myQueueData, requestDate, '|');
+
+            WaitingRequest request;
+            request.queueID = queueID;
+            request.customerID = customerID;
+            request.customerName = customerName;
+            request.instrumentID = instrumentID;
+            request.instrumentName = instrumentName;
+            request.requestDate = requestDate;
+
+            waitingQueue.push_back(request);
+
+            if(queueID.rfind(WAITING_PREFIX, 0) == 0){
+                int number = stoi(queueID.substr(WAITING_PREFIX.size()));
+                if(number > waitingCounter){
+                    waitingCounter = number;
+                }
+            }
+        }
+    }else {
+        cout << "No data in the Queue..." << endl;
+        cout << "Starting with an empty queue." << endl;
+    }
+    myQueueData.close();
+}
+
+void SystemManager::enqueueWaitingCustomer(const string& customerID, const string& customerName, const string& instrumentID, const string& instrumentName){
+    WaitingRequest request;
+    request.queueID = generateID(WAITING_PREFIX);
+    request.customerID = customerID;
+    request.customerName = customerName;
+    request.instrumentID = instrumentID;
+    request.instrumentName = instrumentName;
+    request.requestDate = getCurrentDate();
+
+    waitingQueue.push_back(request);
+
+    cout << "Instrument is currently rented." << endl;
+    cout << "Customer " << customerID << " has been added to the waiting queue." << endl;
+    cout << "Queue ID: " << request.queueID << endl;
+}
+
+void SystemManager::displayWaitingQueue(){
+    bool found = false;
+    cout << "===WAITING QUEUE===\n";
+    for(const auto& request:waitingQueue){
+        found = true;
+        cout << "Queue ID: " << request.queueID << endl;
+        cout << "Customer ID: " << request.customerID << endl;
+        cout << "Customer Name: " << request.customerName << endl;
+        cout << "Instrument ID: " << request.instrumentID << endl;
+        cout << "Instrument Name: " << request.instrumentName << endl;
+        cout << "Request Date: " << request.requestDate << endl;
+        cout << "========================================" << endl;
+    } 
+    if(!found){
+        cout << "The waiting queue is empty..." << endl;
+    }
+}
+
+void SystemManager::processWaitingQueueForInstrument(const string& instrumentID){
+    for(auto it = waitingQueue.begin(); it != waitingQueue.end(); it++){
+        if(it->instrumentID == instrumentID){
+            cout << "Next customer for this instrument:" << endl;
+            cout << "Customer ID: " << it->customerID << endl;
+            cout << "Customer Name: " << it->customerName << endl;
+            cout << "The customer has now been served, removing from queue..." << endl;
+
+            waitingQueue.erase(it);
+            return;
+        }
+    }
+}
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
     int displayNumber = 1;
@@ -371,6 +470,22 @@ void SystemManager::displayAvailableInstruments(){
     cout << "-----------------------" << endl;
     if(!found){
         cout << "No available instrument found." << endl;
+    }
+}
+
+void SystemManager::displayAllInstruments(){
+    int displayNumber = 1;
+    for(const Instrument& instrument:instruments){
+        cout << "----------------------------------" << endl;
+        cout << "Instrument No. " << displayNumber++ << endl;
+
+        displayInstrument(instrument);
+
+        cout << "Status: " << (instrument.getIsAvailable() ? "Available" : "Currently Rented") << endl;
+        cout << "----------------------------------" << endl;
+    }
+    if(instruments.empty()){
+        cout << "No instruments found." << endl;
     }
 }
 
@@ -414,7 +529,7 @@ void SystemManager::rentInstrument(){
         return;
     }
 
-    displayAvailableInstruments();
+    displayAllInstruments();
     cout << "Select the Instrument Number you'd like to rent:"; // Please change this
     cin >> userChoice;
 
@@ -424,20 +539,41 @@ void SystemManager::rentInstrument(){
     }
 
     auto it = instruments.begin();
-    int currentAvailableNumber = 1;
+    int currentNumber = 1;
 
     while(it != instruments.end()){
-        if(it->getIsAvailable()){
-            if(currentAvailableNumber == userChoice){
+            if(currentNumber == userChoice){
                 break;
             }
-            currentAvailableNumber++;
-        }
+            currentNumber++;
         ++it;
     }
 
-    if (it == instruments.end() || !it->getIsAvailable()){
+    if (it == instruments.end()){
         cout << "Input a valid number." << endl;
+        return;
+    }
+
+    //If the instrument is unavailable, ask the customer if they want to join the queue.
+    if(!it->getIsAvailable()){
+        bool answer = false;
+        cout << "This instrument is currently rented.\n";
+        cout << "Would you like to join the waiting queue? (1 for yes, 0 for no): ";
+        cin >> answer;
+
+        if(answer){
+            string customerName;
+            
+            for(const Customer& customer:customers){
+                if(customer.getCustomerID() == customerID){
+                    customerName = customer.getName();
+                    break;
+                }
+            }
+
+            enqueueWaitingCustomer(customerID, customerName, it->getInstrumentID(), it->getName());
+            saveQueuedata();
+        }
         return;
     }
 
@@ -449,7 +585,7 @@ void SystemManager::rentInstrument(){
         cout << "Rental days must be greater than 0." << endl;
         return;
     }
-    
+
     bool discountApplied = false;
     cout << "Apply 10% discount? (1 for yes, 0 for no): ";
     cin >> discountApplied;
@@ -461,10 +597,11 @@ void SystemManager::rentInstrument(){
     double discountAmmount = applyDiscount(it->getRentPerDay(), rentalDays);
     double totalCost = discountApplied ? baseCost - discountAmmount : baseCost;
 
-    Rental newRental(rentalDays, totalCost, isCompleted, it->getInstrumentID(), newID, customerID, "", "");
+    Rental newRental(rentalDays, totalCost, false, it->getInstrumentID(), newID, customerID, "", "");
     setReturnDate(newRental, rentalDays);
     rentals.push_back(newRental);
     cout << "Rented instrument with the ID of " << newID << endl;    
+    saveData();
 }
 
 void SystemManager::returnInstrument(){
@@ -500,6 +637,8 @@ void SystemManager::returnInstrument(){
             }
 
             i->setIsCompleted(true);
+            processWaitingQueueForInstrument(instrumentId);
+            saveData();
             return;
         }
     }
@@ -541,6 +680,9 @@ string SystemManager::generateID(string prefix){
     }else if(prefix == RENTAL_PREFIX){
         rentalCounter++;
         id += to_string(rentalCounter);
+    }else if(prefix == WAITING_PREFIX){
+        waitingCounter++;
+        id += to_string(waitingCounter);
     }
     return id;
 }
@@ -735,5 +877,6 @@ void SystemManager::displayMenu(){
     cout << "9. Search Instrument By Model" << endl;
     cout << "10. View Who Rented What" << endl;
     cout << "11. Sort Instruments  By Price" << endl;
-    cout << "12. Exit" << endl;
+    cout << "12. View Waiting Queue" << endl;
+    cout << "13. Exit" << endl;
 }

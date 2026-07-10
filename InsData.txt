@@ -1,2 +1,4 @@
 1|1|1|INST1|1|1
 2|2|2|INST2|2|1
+Piano|Yamaha|PSR E333|INST3|2000|0
+Guitar|Davis|DV-123|INST4|2500|0

@@ -8,13 +8,7 @@ int main(){
     int choice;
 
     system.loadData();
-    
-    cout << "This version works!! 4.54" << endl << endl;
-
-    do
-    {
-        cout << endl;
-        
+    do{
         system.displayMenu();
         cout << "Type in your choice: ";
         cin >> choice;
@@ -55,11 +49,14 @@ int main(){
                 system.sortInstrumentsByPrice();
                 break;
             case 12:
+                system.displayWaitingQueue();
+                break;
+            case 13:
                 system.saveData();
                 cout << "Bye Bye!" << endl;
                 break;
             }
-    } while (choice != 12);
+    } while (choice != 13);
     return 0;
 }
 
