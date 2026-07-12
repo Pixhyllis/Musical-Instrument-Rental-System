@@ -382,7 +382,7 @@ void SystemManager::loadQueuedata(){
             getline(myQueueData, customerName, '|');
             getline(myQueueData, instrumentID, '|');
             getline(myQueueData, instrumentName, '|');
-            getline(myQueueData, requestDate, '|');
+            getline(myQueueData, requestDate);
 
             WaitingRequest request;
             request.queueID = queueID;
