@@ -382,7 +382,7 @@ void SystemManager::loadQueuedata(){
             getline(myQueueData, customerName, '|');
             getline(myQueueData, instrumentID, '|');
             getline(myQueueData, instrumentName, '|');
-            getline(myQueueData, requestDate, '|');
+            getline(myQueueData, requestDate);
 
             WaitingRequest request;
             request.queueID = queueID;
@@ -443,18 +443,52 @@ void SystemManager::displayWaitingQueue(){
 }
 
 void SystemManager::processWaitingQueueForInstrument(const string& instrumentID){
+
     for(auto it = waitingQueue.begin(); it != waitingQueue.end(); it++){
         if(it->instrumentID == instrumentID){
-            cout << "Next customer for this instrument:" << endl;
+            cout << "\nNext customer for this instrument:\n" << endl;
             cout << "Customer ID: " << it->customerID << endl;
             cout << "Customer Name: " << it->customerName << endl;
-            cout << "The customer has now been served, removing from queue..." << endl;
+            
+            bool assign;
+            cout << "Assign the returned instrument to this customer? (1 = Yes, 0 = No): ";
+            cin >> assign;
+            
+            if(assign){
+                int rentalDays;
+                cout << "Enter rental days: ";
+                cin >> rentalDays;
+
+                double rentPerDay = 0;
+
+                for(Instrument& instrument:instruments){
+                    if(instrument.getInstrumentID() == instrumentID){
+                        rentPerDay = instrument.getRentPerDay();
+                        instrument.setIsAvailable(false);
+                        break;
+                    }
+                }
+            
+                string rentalID = generateID(RENTAL_PREFIX);
+                double totalCost = calculateBaseCost(rentPerDay, rentalDays);
+
+                Rental newRental(rentalDays, totalCost, false, instrumentID, rentalID, it->customerID, "", "");
+                setReturnDate(newRental, rentalDays);
+                rentals.push_back(newRental);
+            
+                cout << "Instruments rented to " << it->customerName << endl;
+                cout << "Rental ID: " << rentalID << endl;
+            }
 
             waitingQueue.erase(it);
+            saveData();
             return;
         }
     }
+
+    cout << "No waiting costumer for this instrument." << endl;
 }
+
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
     int displayNumber = 1;
