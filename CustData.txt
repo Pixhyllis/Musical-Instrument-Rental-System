@@ -1,6 +1,3 @@
-1|CUST1|1|1
-2|CUST2|2|2
-Louie|CUST3|jdsalanguit|12345
-romel|CUST4|rvballeta|0987654321
-chang|CUST5|acchang|12345
-vales|CUST6|gvales|20354123
+q|CUST1|q|q
+Jan Louie Salanguit|CUST2|jdsalanguit@fit.edu.ph|09123456789
+we|CUST3|e|we

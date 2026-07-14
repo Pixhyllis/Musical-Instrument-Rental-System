@@ -15,6 +15,8 @@ const string CUSTOMER_PREFIX = "CUST";
 const string RENTAL_PREFIX = "RENT";
 const string WAITING_PREFIX = "WAIT";
 
+
+
 //STRUCTURE FOR WAITING QUEUE
 struct WaitingRequest
 {
@@ -168,12 +170,11 @@ public:
     void searchInstrumentByModel();
     void displayWhoRentedWhat();
     void sortInstrumentsByPrice(); 
-    void saveQueuedata();
-    void loadQueuedata();
     void displayWaitingQueue();
     void enqueueWaitingCustomer(const string& customerID, const string& customerName, const string& instrumentID, const string& instrumentName);
     void processWaitingQueueForInstrument(const string& instrumentID);
     void displayMenu();
 };
+
 
 #endif

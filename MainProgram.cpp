@@ -7,10 +7,15 @@ int main(){
     SystemManager system;
     int choice;
 
+    cout << "________________________________________________________________________" << endl << endl;
+    cout << "\tCCS0015L - Data Structures and Algorithms (LAB)" << endl;
+    cout << "\t Final Project: Musical Instrument Rental System" << endl;
+    cout << "\t Members:  Balleta, Chang, Salanguit, Vales" << endl;
+    cout << "________________________________________________________________________" << endl;    
     system.loadData();
     do{
         system.displayMenu();
-        cout << "Type in your choice: ";
+        cout << endl << "Type in your choice: ";
         cin >> choice;
         cin.ignore();
          switch (choice)
@@ -54,6 +59,14 @@ int main(){
             case 13:
                 system.saveData();
                 cout << "Bye Bye!" << endl;
+                break;
+            default:
+                cin.clear();
+                cin.ignore(1000, '\n');
+                ::system("cls");
+                cout << "------------------------------------" << endl << endl;
+                cout << "Invalid choice. Please try again." << endl << endl;
+                cout << "------------------------------------" << endl << endl;
                 break;
             }
     } while (choice != 13);
