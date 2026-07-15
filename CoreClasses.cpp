@@ -1137,6 +1137,7 @@ void SystemManager::displayMenu(){
     cout << "\t [11] - Sort Instruments  By Price" << endl;
     cout << "\t [12] - View Waiting Queue" << endl;
     cout << "\t [13] - Exit" << endl;
+    cout << endl << "--------------------------------------------------" << endl;
 }
 
 
