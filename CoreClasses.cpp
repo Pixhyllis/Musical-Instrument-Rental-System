@@ -18,15 +18,16 @@ using namespace std;
 // --------------------------------INSTRUMENTS-----------------------------------
 
 
-
+// Instrument class constructors, getters, setters, and deconstructors - The following block of code is the implementation of the Instrument class. It includes the constructor, destructor, getter and setter methods for the private member variables of the class. The constructor initializes the member variables with the values passed as parameters. The destructor is used to free up any resources that were allocated for the object. The getter methods return the value of the private member variable, while the setter methods assign a new value to the private member variable.
 Instrument::Instrument(string name, string brand, string model, string instrumentID, double rentPerDay, bool isAvailable){
     this->name = name;
     this->brand = brand;
     this->model = model;
-    this->instrumentID = instrumentID;
+    this->instrumentID = instrumentID;                      
     this->rentPerDay = rentPerDay;
     this->isAvailable = isAvailable;
 }
+
 
 Instrument::~Instrument(){
 }
@@ -81,6 +82,8 @@ void Instrument::setIsAvailable(bool isAvailable)
 }
 
 // --------------------------- CUSTOMERS ----------------------------
+
+// Customers class constructors, getters, setters, and deconstructors - The following block of code is the implementation of the Instrument class. It includes the constructor, destructor, getter and setter methods for the private member variables of the class. The constructor initializes the member variables with the values passed as parameters. The destructor is used to free up any resources that were allocated for the object. The getter methods return the value of the private member variable, while the setter methods assign a new value to the private member variable.
 Customer::Customer(string name, string customerID, string email, string contactNumber){
     this->name = name;
     this->customerID = customerID;
@@ -124,6 +127,9 @@ void Customer::setContactNumber(string contactNumber){
 }
 
 // --------------------------- RENTAL ----------------------------
+
+// Rental class constructors, getters, setters, and deconstructors - The following block of code is the implementation of the Instrument class. It includes the constructor, destructor, getter and setter methods for the private member variables of the class. The constructor initializes the member variables with the values passed as parameters. The destructor is used to free up any resources that were allocated for the object. The getter methods return the value of the private member variable, while the setter methods assign a new value to the private member variable.
+
 Rental::Rental(int rentalDays, double totalCost, bool isCompleted, string instrumentID, string rentalID, string customerID, string rentalDate, string returnDate){
     this->rentalDays = rentalDays;
     this->totalCost = totalCost;
@@ -205,6 +211,7 @@ void Rental::setIsCompleted(bool isCompleted){
 
 // ------------------------- SystemManager ---------------------------------
 
+// saveData() function - It saves system data which includes instrument, customer, rental, and waiting queue data to their respective text files. It opens each file in write mode, iterates through the corresponding list of objects, and writes their data to the file in a specific format. After writing all the data, it closes the file.
 void SystemManager::saveData(){
     ofstream myInsData("InsData.txt");
     if (myInsData.is_open()){ 
@@ -260,6 +267,8 @@ void SystemManager::saveData(){
 
 }
 
+
+// loadData() function - It loads system data from text files into the system. It opens each file in read mode, reads the data line by line, and creates corresponding objects (Instrument, Customer, Rental, WaitingRequest) with the read data. It also updates the counters for instruments, customers, rentals, and waiting requests based on the loaded data. If a file is not found, it initializes the corresponding list as empty.
 void SystemManager::loadData(){
     cout << "__________________________________________________" << endl;
     ifstream myInsData("InsData.txt");  
@@ -412,6 +421,8 @@ void SystemManager::loadData(){
     cout << "__________________________________________________" << endl;
 }
 
+
+// enqueueWaitingCustomer() function - It adds a customer to the waiting queue for a specific instrument. It creates a WaitingRequest object with the provided customer and instrument details, generates a unique queue ID, and sets the request date to the current date. The request is then added to the waitingQueue list, and a confirmation message is displayed.
 void SystemManager::enqueueWaitingCustomer(const string& customerID, const string& customerName, const string& instrumentID, const string& instrumentName){
     WaitingRequest request;
     request.queueID = generateID(WAITING_PREFIX);
@@ -433,6 +444,7 @@ void SystemManager::enqueueWaitingCustomer(const string& customerID, const strin
     cout << endl << "------------------------------------" << endl;
 }
 
+// displayWaitingQueue() function - It displays the current waiting queue of customers for instruments. It iterates through the waitingQueue list and prints the details of each waiting request, including queue ID, customer ID, customer name, instrument ID, instrument name, and request date. If the waiting queue is empty, it displays a message indicating that there are no waiting requests.
 void SystemManager::displayWaitingQueue(){
     system("cls");
     cout << "------------------------------------" << endl;
@@ -457,6 +469,7 @@ void SystemManager::displayWaitingQueue(){
     cout << "------------------------------------" << endl;
 }
 
+// processWaitingQueueForInstrument - This block of code assigns the next customer in queue the specific instrument they queued for
 void SystemManager::processWaitingQueueForInstrument(const string& instrumentID){
 
     for(auto it = waitingQueue.begin(); it != waitingQueue.end();){
@@ -549,6 +562,7 @@ void SystemManager::processWaitingQueueForInstrument(const string& instrumentID)
     cout << "------------------------------------" << endl;
 }
 
+// This block of code displays all available instruments
 void SystemManager::displayAvailableInstruments(){
     bool found = false;
     int displayNumber = 1;
@@ -572,6 +586,7 @@ void SystemManager::displayAvailableInstruments(){
     cout << endl << "------------------------------------" << endl << endl;
 }
 
+// This block of code displays all instruments regardless if are rented or not
 void SystemManager::displayAllInstruments(){
     int displayNumber = 1;
     system("cls");
@@ -592,6 +607,7 @@ void SystemManager::displayAllInstruments(){
     cout << "------------------------------------" << endl;
 }
 
+// This block of code displays certain instrument. This block of code are called in some of the functions and it is to be iterated 
 void SystemManager::displayInstrument(const Instrument& instruments){ 
     
     cout << "Instrument ID: " << instruments.getInstrumentID() << endl;
@@ -602,6 +618,7 @@ void SystemManager::displayInstrument(const Instrument& instruments){
     cout << "----------------------------------" << endl;
 }
 
+// This block of code displays all rentals made
 void SystemManager::displayAllRentals(){
     system("cls");
     cout << "------------------------------------" << endl;
@@ -614,6 +631,7 @@ void SystemManager::displayAllRentals(){
     cout << "------------------------------------" << endl;
 }
 
+// This block of code allows registered customers to rent an instrument
 void SystemManager::rentInstrument(){
     int userChoice, rentalDays;
     bool isCompleted = false;
@@ -752,6 +770,7 @@ void SystemManager::rentInstrument(){
     cout << "------------------------------------" << endl;
 }
 
+// This block of code lets users return an instrument. It requires an active rental
 void SystemManager::returnInstrument(){
     string choice, CustomerName, InstrumentName, RentalID, InstrumentID;
     cout << "Type the rental ID you'd like to return: ";
@@ -825,6 +844,7 @@ void SystemManager::returnInstrument(){
     cout << "------------------------------------" << endl << endl;
 }
 
+// This block of code adds an instrument to the instrument vector
 void SystemManager::addInstrument(){
     string name, brand, model;
     double rentPerDay;
@@ -882,6 +902,7 @@ void SystemManager::addInstrument(){
     cout << "------------------------------------" << endl;
 }
 
+// This block of codes generates a unique ID for registering instruments and customers, and as well as rentals and queue
 string SystemManager::generateID(string prefix){
     if(prefix == INSTRUMENT_PREFIX){
         instrumentCounter++;
@@ -900,8 +921,9 @@ string SystemManager::generateID(string prefix){
     return prefix;
 }
 
+// This block of code gets the current date locally in the system
 string SystemManager::getCurrentDate(){
-    // imma be fr this is AI
+
     time_t now = time(nullptr);
     tm localTime{};
 
@@ -912,6 +934,7 @@ string SystemManager::getCurrentDate(){
     return ss.str();
 }
 
+// This block of code registers a customer
 void SystemManager::addCustomer(){
     string name, customerID, email, contactNumber;  
 
@@ -939,6 +962,7 @@ void SystemManager::addCustomer(){
     cout << "------------------------------------" << endl;
 }
 
+// This block of code updates the information of an existing customer
 void SystemManager::updateCustomerInfo(){
     string updateChoice;
     
@@ -980,22 +1004,27 @@ void SystemManager::updateCustomerInfo(){
     cout << "------------------------------------" << endl << endl;
 }
 
+// This block of code calculates the discount applied when a customer avails a discount
 double SystemManager::applyDiscount(double rentPerDay, int rentalDays){
     return (calculateBaseCost(rentPerDay, rentalDays)) * 0.10;  
 }
 
+// This block of code calculates the base cost of an instrument
 double SystemManager::calculateBaseCost(double rentPerDay, int rentalDays){
     return(rentPerDay * rentalDays);
 }
 
+// This block of code calculates the overdue fee whenever the return date is past due
 double SystemManager::applyOverdueFee(double rentPerDay, int rentalDays){
     return calculateBaseCost(rentPerDay, rentalDays) * 0.10;
 }
 
+// This block of code determines if the current date is greater than the assigned return date
 bool SystemManager::isOverdue(const Rental &rental) {
     return getCurrentDate() > rental.getReturnDate();
 }
 
+// This block of code sets the return date
 void SystemManager::setReturnDate(Rental& rental, int rentalDays){
     // Made by AI
     time_t now = time(nullptr);
@@ -1013,6 +1042,7 @@ void SystemManager::setReturnDate(Rental& rental, int rentalDays){
     rental.setReturnDate(buffer);
 }
 
+// This block of code displays the rental information, it is called on the displayAllRentals() function and is iterated to view the history of rentals
 void SystemManager::displayRentalInfo(const Rental& rental){
     cout << "----------------------------------" << endl;
     cout << "Rental ID: " << rental.getRentalID() << endl;
@@ -1030,6 +1060,7 @@ void SystemManager::displayRentalInfo(const Rental& rental){
     }
 }
 
+// This block of code searches instruments by brand
 void SystemManager::searchInstrumentByBrand(){
     string brand;
     bool found = false;
@@ -1059,6 +1090,7 @@ void SystemManager::searchInstrumentByBrand(){
     cout << "------------------------------------" << endl << endl;
 }
 
+// This block of code searches instruments by model
 void SystemManager::searchInstrumentByModel(){
     string model;
     bool found = false;
@@ -1086,6 +1118,7 @@ void SystemManager::searchInstrumentByModel(){
     cout << "------------------------------------" << endl << endl;
 }
 
+// This block of code displays who rented a specific instrument
 void SystemManager::displayWhoRentedWhat(){
     bool found = false;
 
@@ -1111,6 +1144,7 @@ void SystemManager::displayWhoRentedWhat(){
     cout << "------------------------------------" << endl;
 }
 
+// Sorts the list of instruments by order by rental price using the list's .sort() function.
 void SystemManager::sortInstrumentsByPrice(){
     instruments.sort(
         [](const Instrument& a, const Instrument& b){           //LAMBDA FUNCTION TO SORT INSTRUMENTS BY PRICE - Joshua Comment
@@ -1122,6 +1156,7 @@ void SystemManager::sortInstrumentsByPrice(){
     displayAvailableInstruments();
 }
 
+// This block of code displays the menu
 void SystemManager::displayMenu(){
     cout << endl << "-------- Musical Instrument Rental System --------" << endl << endl;
     cout << "\t [1]  - Add instrument" << endl;
