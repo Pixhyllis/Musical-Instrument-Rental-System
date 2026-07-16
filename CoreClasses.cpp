@@ -1097,7 +1097,7 @@ bool SystemManager::isOverdue(const Rental &rental) {
     return getCurrentDate() > rental.getReturnDate();
 }
 
-
+// THis block of code calculate the overdue days
 int SystemManager::calculateOverdueDays(const Rental& rental) {
 
     tm dueDate{};
