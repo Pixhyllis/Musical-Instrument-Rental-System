@@ -1038,6 +1038,10 @@ void SystemManager::updateCustomerInfo(){
     cout << "Type in customer ID you'd like to update: ";
     getline(cin, updateChoice);
 
+    for(char& c : updateChoice){
+        c = toupper(c);
+    }
+
     for(Customer& customer:customers){                         //Run through the list of customers
         if (updateChoice == customer.getCustomerID()){         //to check for matching results
             string name, email, contactNumber;
@@ -1264,6 +1268,7 @@ void SystemManager::sortInstrumentsByPrice(){
 
 // This block of code displays the menu
 void SystemManager::displayMenu(){
+    cout << endl << "\tThe date today is: " << getCurrentDate() << endl;
     cout << endl << "-------- Musical Instrument Rental System --------" << endl << endl;
     cout << "\t [1]  - Add instrument" << endl;
     cout << "\t [2]  - Register Customer" << endl;
@@ -1275,7 +1280,7 @@ void SystemManager::displayMenu(){
     cout << "\t [8]  - Search Instrument By Brand" << endl;
     cout << "\t [9]  - Search Instrument By Model" << endl;
     cout << "\t [10] - View Who Rented What" << endl;
-    cout << "\t [11] - Sort Instruments  By Price" << endl;
+    cout << "\t [11] - Sort Unrented Instruments By Price" << endl;
     cout << "\t [12] - View Waiting Queue" << endl;
     cout << "\t [13] - Exit" << endl;
     cout << endl << "--------------------------------------------------" << endl;
