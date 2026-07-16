@@ -878,6 +878,7 @@ void SystemManager::returnInstrument(){
             cout << "Customer: " << CustomerName << " (ID: " << i->getCustomerID() << ")" << endl;
             cout << "Instrument: " << InstrumentName << " (ID: " << i->getInstrumentID() << ")" << endl;
             cout << "Rented on: " << i->getRentalDate() << endl;
+            cout << "Expected return date: " << i->getReturnDate() << endl;
             cout << "Returned by: " << getCurrentDate() << endl;
             cout << "Days rented: " << i->getRentalDays() << endl << endl;
             cout << "Rental cost: " << i->getTotalCost() << "PHP" << endl;
