@@ -750,6 +750,11 @@ void SystemManager::rentInstrument(){
 
             enqueueWaitingCustomer(customerID, customerName, it->getInstrumentID(), it->getName());
             saveData();
+        }else{
+            system("cls");
+            cout << "_________________________________________________________________" << endl;
+            cout << "Rent Discarded" << endl;
+            cout << "_________________________________________________________________" << endl << endl;
         }
         return;
     }
