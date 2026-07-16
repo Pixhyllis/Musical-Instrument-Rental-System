@@ -638,10 +638,11 @@ void SystemManager::rentInstrument(){
     string customerID;
     string CustomerName;
 
-    // TODO: check if customer has a valid ID, then proceed to rent
+    // check if customer has a valid ID, then proceed to rent
     cout << "Enter customer ID: ";
     cin >> customerID;
 
+    // Makes the input uppercase so that it still finds the specific ID even if they typed in lowercase
     for(char& c : customerID){
         c = toupper(c);
     }
@@ -664,21 +665,38 @@ void SystemManager::rentInstrument(){
         cout << "------------------------------------" << endl << endl;
         return;
     }
+    bool lock1 = 0;
 
-    displayAllInstruments();
-    cout << "Select the Instrument Number you'd like to rent: ";
-    cin >> userChoice;
+    // Handles invalid input
+    do{
 
-    if (userChoice <= 0){
-        system("cls");
-        cout << "------------------------------------" << endl << endl;
-        cout << "Input a valid number." << endl << endl;
-        cout << "------------------------------------" << endl << endl;
-        return;
-    }
+                    displayAllInstruments();
+
+                    cout << "Select the Instrument Number you'd like to rent: ";
+                    cin >> userChoice;
+
+                    if(cin.fail()){
+                        cin.clear(); 
+                        cin.ignore(10000, '\n'); 
+                        system("cls");
+                        cout << "_________________________________________________________________" << endl;
+                        cout << "Invalid input. Please enter a valid choice." << endl;
+                        cout << "_________________________________________________________________" << endl << endl;
+                    }else if(userChoice <= 0){
+                        system("cls");
+                        cout << "------------------------------------" << endl << endl;
+                        cout << "Input a valid number." << endl << endl;
+                        cout << "------------------------------------" << endl << endl;
+                        return;
+                    }
+                    else{
+                        lock1 = 1;
+                    }
+                }while(lock1 != 1);
 
     auto it = instruments.begin();
     int currentNumber = 1;
+    
 
     while(it != instruments.end()){
             if(currentNumber == userChoice){
@@ -700,8 +718,25 @@ void SystemManager::rentInstrument(){
     if(!it->getIsAvailable()){
         bool answer = false;
         cout << "This instrument is currently rented.\n";
-        cout << "Would you like to join the waiting queue? (1 for yes, 0 for no): ";
-        cin >> answer;
+
+        bool lock2 = 0;
+
+        // Handles invalid input
+        do{
+                    cout << "Would you like to join the waiting queue? (1 for yes, 0 for no): ";
+                    cin >> answer;
+
+                    if(cin.fail()){
+                        cin.clear(); 
+                        cin.ignore(10000, '\n'); 
+                        system("cls");
+                        cout << "_________________________________________________________________" << endl;
+                        cout << "Invalid input. Please enter a valid choice." << endl;
+                        cout << "_________________________________________________________________" << endl << endl;
+                    }else{
+                        lock2 = 1;
+                    }
+                }while(lock2 != 1);
 
         if(answer){
             string customerName;
@@ -719,17 +754,38 @@ void SystemManager::rentInstrument(){
         return;
     }
 
+    
     cout << "Selected: " << it->getName() << endl;
-    cout << "How many days would you like to rent this instrument?: ";
+
+    bool lock3 = 0;
+
+        // Handles invalid input
+        do{
+                    cout << "How many days would you like to rent this instrument?: ";
     cin >> rentalDays;
 
-    if (rentalDays <= 0){
-        cout << "Rental days must be greater than 0." << endl;
-        return;
-    }
+                    if(cin.fail()){
+                            cin.clear(); 
+                            cin.ignore(10000, '\n'); 
+                            system("cls");
+                            cout << "_________________________________________________________________" << endl;
+                            cout << "Invalid input. Please enter a valid choice." << endl;
+                            cout << "_________________________________________________________________" << endl << endl;
+                        }else if(rentalDays <= 0){
+                            system("cls");
+                            cout << "_________________________________________________________________" << endl;
+                            cout << "Rental days must be greater than 0." << endl;
+                            cout << "_________________________________________________________________" << endl << endl;
+                        }
+                        else{
+                            lock3 = 1;
+                        }
+                     }while(lock3 != 1);
 
     bool discountApplied = false;
-    bool lock = 0;
+    bool lock4 = 0;
+
+    // Handles invalid input
     do{
                     cout << "Apply 10% discount? (1 for yes, 0 for no): ";
                     cin >> discountApplied;
@@ -742,9 +798,9 @@ void SystemManager::rentInstrument(){
                         cout << "Invalid input. Please enter a valid choice." << endl;
                         cout << "_________________________________________________________________" << endl << endl;
                     }else{
-                        lock = 1;
+                        lock4 = 1;
                     }
-                }while(lock != 1);
+                }while(lock4 != 1);
 
     it->setIsAvailable(false);
 
