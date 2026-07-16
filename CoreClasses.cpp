@@ -834,6 +834,7 @@ void SystemManager::rentInstrument(){
 // This block of code lets users return an instrument. It requires an active rental
 void SystemManager::returnInstrument(){
     string choice, CustomerName, InstrumentName, RentalID, InstrumentID;
+    
     cout << "Type the rental ID you'd like to return: ";
     cin >> choice;
 
@@ -885,9 +886,13 @@ void SystemManager::returnInstrument(){
 
             double totalCost = i->getTotalCost();
             if(isOverdue(*i)){
-                double overDueFee = applyOverdueFee(rentPerDay, i->getRentalDays());
-                cout << "*Overdue fee: " << overDueFee << "PHP" << endl << endl;
-                cout << "\t -- TOTAL COST: " << totalCost + overDueFee << "PHP --" << endl;
+                int overdueDays = calculateOverdueDays(*i);
+                double overDueFee = applyOverdueFee(rentPerDay, overdueDays);
+
+                cout << "Overdue Days: " << overdueDays << " (Rate per overdue day: " << (rentPerDay*1.10) << ")" << endl;
+                cout << "*Overdue fee: " << overDueFee << " PHP" << endl << endl;
+                cout << "\t -- TOTAL COST: " << (totalCost += overDueFee) << " PHP --" << endl;
+                cout << "Please pay at the counter. Thank You!" << endl << endl;
                 cout << "------------------------------------" << endl << endl;
             }else{
                 cout << endl << "\t -- TOTAL COST: " << totalCost << "PHP --" << endl;
@@ -1077,14 +1082,51 @@ double SystemManager::calculateBaseCost(double rentPerDay, int rentalDays){
 }
 
 // This block of code calculates the overdue fee whenever the return date is past due
-double SystemManager::applyOverdueFee(double rentPerDay, int rentalDays){
-    return calculateBaseCost(rentPerDay, rentalDays) * 0.10;
+double SystemManager::applyOverdueFee(double rentPerDay, int overdueDays){
+    return calculateBaseCost(rentPerDay, overdueDays) * 1.10;
 }
 
 // This block of code determines if the current date is greater than the assigned return date
 bool SystemManager::isOverdue(const Rental &rental) {
     return getCurrentDate() > rental.getReturnDate();
 }
+
+
+int SystemManager::calculateOverdueDays(const Rental& rental) {
+
+    tm dueDate{};
+    tm today{};
+
+    // Convert return date string ("YYYY-MM-DD") to tm
+    istringstream ss(rental.getReturnDate());
+    ss >> get_time(&dueDate, "%Y-%m-%d");
+
+    // Get today's date
+    time_t now = time(nullptr);
+    localtime_s(&today, &now);
+
+    // Remove time of day
+    dueDate.tm_hour = 0;
+    dueDate.tm_min = 0;
+    dueDate.tm_sec = 0;
+
+    today.tm_hour = 0;
+    today.tm_min = 0;
+    today.tm_sec = 0;
+
+    time_t dueTime = mktime(&dueDate);
+    time_t todayTime = mktime(&today);
+
+    int overdueDays = static_cast<int>(
+        difftime(todayTime, dueTime) / (60 * 60 * 24)
+    );
+
+    if (overdueDays < 0)
+        overdueDays = 0;
+
+    return overdueDays;
+}
+
 
 // This block of code sets the return date
 void SystemManager::setReturnDate(Rental& rental, int rentalDays){
