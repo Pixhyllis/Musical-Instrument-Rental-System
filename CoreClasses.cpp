@@ -889,9 +889,11 @@ void SystemManager::returnInstrument(){
                 int overdueDays = calculateOverdueDays(*i);
                 double overDueFee = applyOverdueFee(rentPerDay, overdueDays);
 
+                i->setTotalCost(totalCost += overDueFee);
+
                 cout << "Overdue Days: " << overdueDays << " (Rate per overdue day: " << (rentPerDay*1.10) << ")" << endl;
                 cout << "*Overdue fee: " << overDueFee << " PHP" << endl << endl;
-                cout << "\t -- TOTAL COST: " << (totalCost += overDueFee) << " PHP --" << endl;
+                cout << "\t -- TOTAL COST: " << totalCost << " PHP --" << endl;
                 cout << "Please pay at the counter. Thank You!" << endl << endl;
                 cout << "------------------------------------" << endl << endl;
             }else{
@@ -1153,7 +1155,7 @@ void SystemManager::displayRentalInfo(const Rental& rental){
     cout << "Rented Instrument ID: " << rental.getInstrumentID() << endl;
     cout << "Days to be rented: " << rental.getRentalDays() << endl;
     cout << "Rental Date: " << rental.getRentalDate() << endl;
-    cout << "Return Date: " << rental.getReturnDate() << endl;
+    cout << "Intended Return Date: " << rental.getReturnDate() << endl;
     cout << "Rented by: " << rental.getCustomerID() << endl;
     cout << "Total cost: " << rental.getTotalCost() << "PHP" << endl;
     cout << endl << "Status: ";
