@@ -1,3 +1,5 @@
-q|CUST1|q|q
-Jan Louie Salanguit|CUST2|jdsalanguit@fit.edu.ph|09123456789
-we|CUST3|e|we
+Akira Morishita|CUST1|AMorishita@bgyomail.com|0917 482 6395
+Gelo Rivera|CUST2|GRivera@bgyomail.com|0928 715 0463
+Nate Porcalla|CUST3|NPorcalla@bgyomail.com|0935 864 2917
+JL Toreliza|CUST4|JToreliza@bgyomail.com|0949 371 5802
+Mikki Claver|CUST5|MClaver@gmail.com|0992 640 1857

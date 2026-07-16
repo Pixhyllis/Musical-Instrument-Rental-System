@@ -160,6 +160,7 @@ public:
     string generateID(string prefix);
     string getCurrentDate();
     void updateCustomerInfo();
+    int calculateOverdueDays(const Rental& rental);
     double applyDiscount(double rentPerDay, int rentalDays);
     double calculateBaseCost(double rentPerDay, int rentalDays);
     double applyOverdueFee(double rentPerDay, int rentalDays);
